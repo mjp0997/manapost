@@ -19,6 +19,7 @@ class CreateClientesTable extends Migration
             $table->string('cedula');
             $table->string('direccion');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

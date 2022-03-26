@@ -30,6 +30,7 @@ class CreateEnviosTable extends Migration
             $table->foreignId('consignatario_id')->constrained('empleados');
             $table->boolean('retirado')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

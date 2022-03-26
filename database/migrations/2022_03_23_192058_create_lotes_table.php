@@ -22,6 +22,7 @@ class CreateLotesTable extends Migration
             $table->foreignId('transporte_id')->nullable()->constrained('transportes');
             $table->foreignId('ruta_id')->constrained('rutas');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

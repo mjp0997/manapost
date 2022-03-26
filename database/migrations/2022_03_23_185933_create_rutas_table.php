@@ -18,6 +18,7 @@ class CreateRutasTable extends Migration
             $table->foreignId('origen_id')->constrained('sucursales');
             $table->foreignId('destino_id')->constrained('sucursales');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

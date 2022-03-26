@@ -20,6 +20,7 @@ class CreateTransportesTable extends Migration
             $table->string('modelo');
             $table->string('placa');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -19,6 +19,7 @@ class CreateUsuariosTable extends Migration
             $table->string('clave');
             $table->foreignId('empleado_id')->constrained('empleados');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

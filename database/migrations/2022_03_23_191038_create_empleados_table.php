@@ -22,6 +22,7 @@ class CreateEmpleadosTable extends Migration
             $table->foreignId('rol_id')->constrained('roles');
             $table->foreignId('sucursal_id')->constrained('sucursales');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -19,6 +19,7 @@ class CreateArticulosTable extends Migration
             $table->integer('cantidad')->unsigned();
             $table->foreignId('envio_id')->constrained('envios');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

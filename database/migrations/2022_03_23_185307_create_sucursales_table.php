@@ -18,6 +18,7 @@ class CreateSucursalesTable extends Migration
             $table->string('nombre');
             $table->foreignId('ciudad_id')->constrained('ciudades');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

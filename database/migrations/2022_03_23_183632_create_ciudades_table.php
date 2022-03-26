@@ -18,6 +18,7 @@ class CreateCiudadesTable extends Migration
             $table->string('nombre');
             $table->foreignId('estado_id')->constrained('estados');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
