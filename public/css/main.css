@@ -311,6 +311,7 @@ body {
 .Table__Text {
   width: 45%;
   padding-top: 0.5rem;
+  text-align: center;
 }
 .Table__ButtonBox {
   display: flex;
@@ -504,6 +505,7 @@ body {
   transition: border 0.3s;
   flex-grow: 1;
   padding-bottom: 0.2rem;
+  text-align: center;
 }
 .Modal__Input:focus, .Modal__Input:hover {
   border-color: #FF2A00;

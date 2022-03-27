@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ciudad;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class SucursalController extends Controller
      */
     public function index()
     {
-        //
+        $sucursales = Sucursal::all();
+
+        return view('sucursales.list', [
+            'sucursales' => $sucursales
+        ]);
     }
 
     /**
@@ -24,7 +29,11 @@ class SucursalController extends Controller
      */
     public function create()
     {
-        //
+        $ciudades = Ciudad::all();
+
+        return view('sucursales.create', [
+            'ciudades' => $ciudades
+        ]);
     }
 
     /**
@@ -35,7 +44,39 @@ class SucursalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ciudad = Ciudad::find($request->ciudad);
+
+        if (is_null($ciudad)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ciudad seleccionada no se encuentra en los registros');
+        }
+
+        $sucursal = Sucursal::withTrashed()->firstWhere([
+            ['nombre', $request->nombre],
+            ['ciudad_id', $request->ciudad]
+        ]);
+        
+        if (is_null($sucursal)) {
+            $sucursal = new Sucursal;
+            $sucursal->nombre = $request->nombre;
+            $sucursal->ciudad_id = $request->ciudad;
+            $sucursal->save();
+
+            return redirect('/sucursales')
+                ->with('success', 'La sucursal '.$sucursal->nombre.' fue creada satisfactoriamente');
+        }
+
+        if (!is_null($sucursal->deleted_at)) {
+            $sucursal->restore();
+
+            return redirect('/sucursales')
+                ->with('success', 'La sucursal '.$ciudad->nombre.' fue creada satisfactoriamente');
+        }
+
+        return back()
+            ->withInput()
+            ->with('error', 'La sucursal '.$request->nombre.' ya se encuentra registrada');
     }
 
     /**
@@ -44,9 +85,18 @@ class SucursalController extends Controller
      * @param  \App\Models\Sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function show(Sucursal $sucursal)
+    public function show($id)
     {
-        //
+        $sucursal = Sucursal::find($id);
+
+        if (is_null($sucursal)) {
+            return redirect('/sucursales')
+                ->with('error', 'La sucursal que busca no existe');
+        }
+
+        return view('sucursales.show', [
+            'sucursal' => $sucursal
+        ]);
     }
 
     /**
@@ -55,9 +105,21 @@ class SucursalController extends Controller
      * @param  \App\Models\Sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function edit(Sucursal $sucursal)
+    public function edit($id)
     {
-        //
+        $sucursal = Sucursal::find($id);
+
+        $ciudades = Ciudad::all();
+
+        if (is_null($sucursal)) {
+            return redirect('/sucursales')
+                ->with('error', 'La sucursal que busca no existe');
+        }
+
+        return view('sucursales.edit', [
+            'sucursal' => $sucursal,
+            'ciudades' => $ciudades
+        ]);
     }
 
     /**
@@ -67,9 +129,31 @@ class SucursalController extends Controller
      * @param  \App\Models\Sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sucursal $sucursal)
+    public function update(Request $request, $id)
     {
-        //
+        $ciudad = Ciudad::find($request->ciudad);
+
+        if (is_null($ciudad)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ciudad seleccionada no se encuentra en los registros');
+        }
+
+        $sucursal = Sucursal::withTrashed()->firstWhere('nombre', $request->nombre);
+        
+        if (is_null($sucursal) || $sucursal->id == $id) {
+            $sucursal = Sucursal::find($id);
+            $sucursal->nombre = $request->nombre;
+            $sucursal->ciudad_id = $request->ciudad;
+            $sucursal->save();
+
+            return redirect('/sucursales')
+                ->with('success', 'La sucursal '.$sucursal->nombre.' fue actualizada satisfactoriamente');
+        }
+        
+        return back()
+            ->withInput()
+            ->with('error', 'La sucursal '.$request->nombre.' ya se encuentra registrada');
     }
 
     /**
@@ -78,8 +162,16 @@ class SucursalController extends Controller
      * @param  \App\Models\Sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sucursal $sucursal)
+    public function destroy($id)
     {
-        //
+        $sucursal = Sucursal::find($id);
+
+        if (!is_null($sucursal)) {
+            $sucursal->delete();
+
+            return redirect('/sucursales')->with('success', 'La sucursal '.$sucursal->nombre.' fue eliminada satisfactoriamente');
+        }
+
+        return redirect('/sucursales')->with('error', 'La sucursal que busca no existe');
     }
 }

@@ -137,8 +137,12 @@ class EstadoController extends Controller
     {
         $estado = Estado::find($id);
 
-        $estado->delete();
+        if (!is_null($estado)) {
+            $estado->delete();
+    
+            return redirect('/estados')->with('success', 'El estado '.$estado->nombre.' fue eliminado satisfactoriamente');
+        }
 
-        return redirect('/estados')->with('success', 'El estado '.$estado->nombre.' fue eliminado satisfactoriamente');
+        return redirect('/estados')->with('error', 'El estado que busca no existe');
     }
 }

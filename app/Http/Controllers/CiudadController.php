@@ -166,8 +166,13 @@ class CiudadController extends Controller
     {
         $ciudad = Ciudad::find($id);
 
-        $ciudad->delete();
+        if (!is_null($ciudad)) {
+            $ciudad->delete();
 
-        return redirect('/ciudades')->with('success', 'La ciudad '.$ciudad->nombre.' fue eliminada satisfactoriamente');
+            return redirect('/ciudades')->with('success', 'La ciudad '.$ciudad->nombre.' fue eliminada satisfactoriamente');
+        }
+
+        return redirect('/ciudades')->with('error', 'La ciudad que busca no existe');
+
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Controllers
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\SucursalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,21 @@ Route::group(['prefix' => '/estados', 'controller' => EstadoController::class], 
 });
 
 Route::group(['prefix' => '/ciudades', 'controller' => CiudadController::class], function () {
+
+    Route::get('/', 'index');
+
+    Route::get('/mostrar/{id}', 'show');
+
+    Route::get('/crear', 'create');
+    Route::post('/guardar', 'store');
+
+    Route::get('/editar/{id}', 'edit');
+    Route::put('/actualizar/{id}', 'update');
+
+    Route::delete('/eliminar/{id}', 'destroy');
+});
+
+Route::group(['prefix' => '/sucursales', 'controller' => SucursalController::class], function () {
 
     Route::get('/', 'index');
 
