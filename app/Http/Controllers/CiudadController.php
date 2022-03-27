@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ciudad;
+use App\Models\Estado;
 use Illuminate\Http\Request;
 
 class CiudadController extends Controller
@@ -14,7 +15,11 @@ class CiudadController extends Controller
      */
     public function index()
     {
-        //
+        $ciudades = Ciudad::all();
+
+        return view('ciudades.list', [
+            'ciudades' => $ciudades
+        ]);
     }
 
     /**
@@ -24,7 +29,11 @@ class CiudadController extends Controller
      */
     public function create()
     {
-        //
+        $estados = Estado::all();
+
+        return view('ciudades.create', [
+            'estados' => $estados
+        ]);
     }
 
     /**
@@ -35,7 +44,39 @@ class CiudadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $estado = Estado::find($request->estado);
+
+        if (is_null($estado)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El estado seleccionado no se encuentra en los registros');
+        }
+
+        $ciudad = Ciudad::withTrashed()->firstWhere([
+            ['nombre', $request->nombre],
+            ['estado_id', $request->estado]
+        ]);
+        
+        if (is_null($ciudad)) {
+            $ciudad = new Ciudad;
+            $ciudad->nombre = $request->nombre;
+            $ciudad->estado_id = $request->estado;
+            $ciudad->save();
+
+            return redirect('/ciudades')
+                ->with('success', 'La ciudad '.$ciudad->nombre.' fue creada satisfactoriamente');
+        }
+
+        if (!is_null($ciudad->deleted_at)) {
+            $ciudad->restore();
+
+            return redirect('/ciudades')
+                ->with('success', 'La ciudad '.$ciudad->nombre.' fue creada satisfactoriamente');
+        }
+
+        return back()
+            ->withInput()
+            ->with('error', 'La ciudad '.$request->nombre.' ya se encuentra registrada');
     }
 
     /**
@@ -44,9 +85,18 @@ class CiudadController extends Controller
      * @param  \App\Models\Ciudad  $ciudad
      * @return \Illuminate\Http\Response
      */
-    public function show(Ciudad $ciudad)
+    public function show($id)
     {
-        //
+        $ciudad = Ciudad::find($id);
+
+        if (is_null($ciudad)) {
+            return redirect('/ciudades')
+                ->with('error', 'La ciudad que busca no existe');
+        }
+
+        return view('ciudades.show', [
+            'ciudad' => $ciudad
+        ]);
     }
 
     /**
@@ -55,9 +105,21 @@ class CiudadController extends Controller
      * @param  \App\Models\Ciudad  $ciudad
      * @return \Illuminate\Http\Response
      */
-    public function edit(Ciudad $ciudad)
+    public function edit($id)
     {
-        //
+        $ciudad = Ciudad::find($id);
+
+        $estados = Estado::all();
+
+        if (is_null($ciudad)) {
+            return redirect('/ciudades')
+                ->with('error', 'La ciudad que busca no existe');
+        }
+
+        return view('ciudades.edit', [
+            'ciudad' => $ciudad,
+            'estados' => $estados
+        ]);
     }
 
     /**
@@ -67,9 +129,31 @@ class CiudadController extends Controller
      * @param  \App\Models\Ciudad  $ciudad
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Ciudad $ciudad)
+    public function update(Request $request, $id)
     {
-        //
+        $estado = Estado::find($request->estado);
+
+        if (is_null($estado)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El estado seleccionado no se encuentra en los registros');
+        }
+
+        $ciudad = Ciudad::withTrashed()->firstWhere('nombre', $request->nombre);
+        
+        if (is_null($ciudad) || $ciudad->id == $id) {
+            $ciudad = Ciudad::find($id);
+            $ciudad->nombre = $request->nombre;
+            $ciudad->estado_id = $request->estado;
+            $ciudad->save();
+
+            return redirect('/ciudades')
+                ->with('success', 'La ciudad '.$ciudad->nombre.' fue actualizada satisfactoriamente');
+        }
+        
+        return back()
+            ->withInput()
+            ->with('error', 'La ciudad '.$request->nombre.' ya se encuentra registrada');
     }
 
     /**
@@ -78,8 +162,12 @@ class CiudadController extends Controller
      * @param  \App\Models\Ciudad  $ciudad
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ciudad $ciudad)
+    public function destroy($id)
     {
-        //
+        $ciudad = Ciudad::find($id);
+
+        $ciudad->delete();
+
+        return redirect('/ciudades')->with('success', 'La ciudad '.$ciudad->nombre.' fue eliminada satisfactoriamente');
     }
 }

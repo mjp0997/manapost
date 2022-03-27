@@ -133,7 +133,7 @@ body {
   width: 100%;
   height: 20rem;
   clip-path: polygon(0 0, 100% 0%, 100% 100%, 0 calc(100% - 3rem));
-  background: url("../MULTIMEDIA/Cajas.jpeg");
+  background: url("../media/Cajas.jpeg");
   background-position: bottom left;
   background-size: cover;
 }
@@ -222,7 +222,7 @@ body {
 }
 .Section__Box--Mid {
   width: calc(50% - 4.5rem);
-  flex-gap: 1rem;
+  gap: 1rem;
 }
 .Section__Title {
   font-size: 1.8rem;
@@ -537,28 +537,28 @@ body {
   width: 50%;
 }
 .Modal #Clientes .Modal__Img {
-  background-image: url("../MULTIMEDIA/Clientes 2.jpg");
+  background-image: url("../media/Clientes 2.jpg");
   width: 40%;
 }
 .Modal #Envios .Modal__Img {
-  background-image: url("../MULTIMEDIA/Envios 1.jpg");
+  background-image: url("../media/Envios 1.jpg");
   width: 40%;
 }
 .Modal #Lotes .Modal__Img {
-  background-image: url("../MULTIMEDIA/Cajas Vertical.jpg");
+  background-image: url("../media/Cajas Vertical.jpg");
   width: 45%;
 }
 .Modal #Transportes .Modal__Img {
-  background-image: url("../MULTIMEDIA/Transporte.jpg");
+  background-image: url("../media/Transporte.jpg");
   background-position: bottom right;
 }
 .Modal #Empleados .Modal__Img {
-  background-image: url("../MULTIMEDIA/Empleados.jpg");
+  background-image: url("../media/Empleados.jpg");
   width: 40%;
   background-position: bottom right;
 }
 .Modal #Usuarios .Modal__Img {
-  background-image: url("../MULTIMEDIA/Usuarios.jpg");
+  background-image: url("../media/Usuarios.jpg");
   width: 50%;
   background-position: bottom right;
 }
