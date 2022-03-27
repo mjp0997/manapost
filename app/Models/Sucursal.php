@@ -11,4 +11,8 @@ class Sucursal extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'sucursales';
+
+    public function ciudad() {
+        return $this->belongsTo(Ciudad::class, 'ciudad_id');
+    }
 }

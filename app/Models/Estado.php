@@ -11,4 +11,9 @@ class Estado extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'estados';
+
+    public function ciudades()
+    {
+        return $this->hasMany(Ciudad::class, 'estado_id');
+    }
 }
