@@ -14,7 +14,11 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        //
+        $estados = Estado::all();
+
+        return view('estados.list', [
+            'estados' => $estados
+        ]);
     }
 
     /**
@@ -24,7 +28,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        //
+        return view('estados.create');
     }
 
     /**
@@ -35,7 +39,27 @@ class EstadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $estado = Estado::withTrashed()->firstWhere('nombre', $request->nombre);
+        
+        if (is_null($estado)) {
+            $estado = new Estado;
+            $estado->nombre = $request->nombre;
+            $estado->save();
+
+            return redirect('/estados')
+                ->with('success', 'El estado '.$estado->nombre.' fue creado satisfactoriamente');
+        }
+
+        if (!is_null($estado->deleted_at)) {
+            $estado->restore();
+
+            return redirect('/estados')
+                ->with('success', 'El estado '.$estado->nombre.' fue creado satisfactoriamente');
+        }
+
+        return back()
+            ->withInput()
+            ->with('error', 'El estado '.$request->nombre.' ya se encuentra registrado');
     }
 
     /**
@@ -44,9 +68,18 @@ class EstadoController extends Controller
      * @param  \App\Models\Estado  $estado
      * @return \Illuminate\Http\Response
      */
-    public function show(Estado $estado)
+    public function show($id)
     {
-        //
+        $estado = Estado::find($id);
+
+        if (is_null($estado)) {
+            return redirect('/estados')
+                ->with('error', 'El estado que busca no existe');
+        }
+
+        return view('estados.show', [
+            'estado' => $estado
+        ]);
     }
 
     /**
@@ -55,9 +88,18 @@ class EstadoController extends Controller
      * @param  \App\Models\Estado  $estado
      * @return \Illuminate\Http\Response
      */
-    public function edit(Estado $estado)
+    public function edit($id)
     {
-        //
+        $estado = Estado::find($id);
+
+        if (is_null($estado)) {
+            return redirect('/estados')
+                ->with('error', 'El estado que busca no existe');
+        }
+
+        return view('estados.edit', [
+            'estado' => $estado
+        ]);
     }
 
     /**
@@ -67,9 +109,22 @@ class EstadoController extends Controller
      * @param  \App\Models\Estado  $estado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Estado $estado)
+    public function update(Request $request, $id)
     {
-        //
+        $estado = Estado::withTrashed()->firstWhere('nombre', $request->nombre);
+        
+        if (is_null($estado)) {
+            $estado = Estado::find($id);
+            $estado->nombre = $request->nombre;
+            $estado->save();
+
+            return redirect('/estados')
+                ->with('success', 'El estado '.$estado->nombre.' fue actualizado satisfactoriamente');
+        }
+        
+        return back()
+            ->withInput()
+            ->with('error', 'El estado '.$request->nombre.' ya se encuentra registrado');
     }
 
     /**
@@ -78,8 +133,12 @@ class EstadoController extends Controller
      * @param  \App\Models\Estado  $estado
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Estado $estado)
+    public function destroy($id)
     {
-        //
+        $estado = Estado::find($id);
+
+        $estado->delete();
+
+        return redirect('/estados')->with('success', 'El estado '.$estado->nombre.' fue eliminado satisfactoriamente');
     }
 }

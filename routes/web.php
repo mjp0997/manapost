@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Controllers
+use App\Http\Controllers\EstadoController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,5 +17,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main');
+});
+
+Route::group(['prefix' => '/estados', 'controller' => EstadoController::class], function () {
+
+    Route::get('/', 'index');
+
+    Route::get('/mostrar/{id}', 'show');
+
+    Route::get('/crear', 'create');
+    Route::post('/guardar', 'store');
+
+    Route::get('/editar/{id}', 'edit');
+    Route::put('/actualizar/{id}', 'update');
+
+    Route::delete('/eliminar/{id}', 'destroy');
 });
