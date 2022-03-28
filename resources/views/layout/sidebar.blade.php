@@ -9,6 +9,8 @@
    <a href="{{ url('/ciudades') }}" class="Aside__Button"><span class="icon-office"></span>Ciudades</a>
 
    <a href="{{ url('/sucursales') }}" class="Aside__Button"><span class="icon-office"></span>Sucursales</a>
+
+   <a href="{{ url('/rutas') }}" class="Aside__Button"><span class="icon-truck"></span>Rutas</a>
    
    <div class="Aside__Img">
       <div class="Aside__Separator"></div>
