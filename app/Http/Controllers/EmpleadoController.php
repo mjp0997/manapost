@@ -161,7 +161,7 @@ class EmpleadoController extends Controller
         if (!ctype_digit($request->cedula)) {
             return back()
                 ->withInput()
-                ->with('error', 'La cédula debe contener solo números enteros 1');
+                ->with('error', 'La cédula debe contener solo números enteros');
         }
 
         $rol = Rol::find($request->rol);

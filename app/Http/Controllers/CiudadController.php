@@ -131,6 +131,14 @@ class CiudadController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $ciudad = Ciudad::find($id);
+
+        if (is_null($ciudad)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ciudad que busca no existe');
+        }
+
         $estado = Estado::find($request->estado);
 
         if (is_null($estado)) {
@@ -139,21 +147,20 @@ class CiudadController extends Controller
                 ->with('error', 'El estado seleccionado no se encuentra en los registros');
         }
 
-        $ciudad = Ciudad::withTrashed()->firstWhere('nombre', $request->nombre);
+        $ciudadE = Ciudad::withTrashed()->firstWhere('nombre', $request->nombre);
         
-        if (is_null($ciudad) || $ciudad->id == $id) {
-            $ciudad = Ciudad::find($id);
-            $ciudad->nombre = $request->nombre;
-            $ciudad->estado_id = $request->estado;
-            $ciudad->save();
-
-            return redirect('/ciudades')
-                ->with('success', 'La ciudad '.$ciudad->nombre.' fue actualizada satisfactoriamente');
+        if (!is_null($ciudadE) && $ciudadE->id != $id) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ciudad '.$request->nombre.' ya se encuentra registrada');
         }
         
-        return back()
-            ->withInput()
-            ->with('error', 'La ciudad '.$request->nombre.' ya se encuentra registrada');
+        $ciudad->nombre = $request->nombre;
+        $ciudad->estado_id = $request->estado;
+        $ciudad->save();
+
+        return redirect('/ciudades')
+            ->with('success', 'La ciudad '.$ciudad->nombre.' fue actualizada satisfactoriamente');
     }
 
     /**

@@ -131,29 +131,36 @@ class SucursalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $ciudad = Ciudad::find($request->ciudad);
+        $sucursal = Sucursal::find($id);
 
+        if (is_null($sucursal)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La sucursal que busca no existe');
+        }
+        
+        $ciudad = Ciudad::find($request->ciudad);
+        
         if (is_null($ciudad)) {
             return back()
                 ->withInput()
                 ->with('error', 'La ciudad seleccionada no se encuentra en los registros');
         }
 
-        $sucursal = Sucursal::withTrashed()->firstWhere('nombre', $request->nombre);
+        $sucursalE = Sucursal::withTrashed()->firstWhere('nombre', $request->nombre);
         
-        if (is_null($sucursal) || $sucursal->id == $id) {
-            $sucursal = Sucursal::find($id);
-            $sucursal->nombre = $request->nombre;
-            $sucursal->ciudad_id = $request->ciudad;
-            $sucursal->save();
-
-            return redirect('/sucursales')
-                ->with('success', 'La sucursal '.$sucursal->nombre.' fue actualizada satisfactoriamente');
+        if (!is_null($sucursalE) && $sucursalE->id != $id) {
+            return back()
+                ->withInput()
+                ->with('error', 'La sucursal '.$request->nombre.' ya se encuentra registrada');
         }
+
+        $sucursal->nombre = $request->nombre;
+        $sucursal->ciudad_id = $request->ciudad;
+        $sucursal->save();
         
-        return back()
-            ->withInput()
-            ->with('error', 'La sucursal '.$request->nombre.' ya se encuentra registrada');
+        return redirect('/sucursales')
+            ->with('success', 'La sucursal '.$sucursal->nombre.' fue actualizada satisfactoriamente');
     }
 
     /**

@@ -113,22 +113,29 @@ class RolController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $rol = Rol::find($id);
+
+        if (is_null($rol)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El rol que busca no existe');
+        }
+
         $rolNombre = strtoupper($request->nombre);
 
-        $rol = Rol::withTrashed()->firstWhere('nombre', $rolNombre);
+        $rolE = Rol::withTrashed()->firstWhere('nombre', $rolNombre);
         
-        if (is_null($rol)) {
-            $rol = Rol::find($id);
-            $rol->nombre = $rolNombre;
-            $rol->save();
-
-            return redirect('/roles')
-                ->with('success', 'El rol '.$rol->nombre.' fue actualizado satisfactoriamente');
+        if (!is_null($rolE)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El rol '.$rolNombre.' ya se encuentra registrado');
         }
-        
-        return back()
-            ->withInput()
-            ->with('error', 'El rol '.$rolNombre.' ya se encuentra registrado');
+
+        $rol->nombre = $rolNombre;
+        $rol->save();
+
+        return redirect('/roles')
+            ->with('success', 'El rol '.$rol->nombre.' fue actualizado satisfactoriamente');
     }
 
     /**

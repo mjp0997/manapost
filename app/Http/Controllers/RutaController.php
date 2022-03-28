@@ -145,6 +145,14 @@ class RutaController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $ruta = Ruta::find($id);
+
+        if (is_null($ruta)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ruta que busca no existe');
+        }
+
         if ($request->origen == $request->destino) {
             return back()
                 ->withInput()
@@ -167,24 +175,23 @@ class RutaController extends Controller
                 ->with('error', 'La sucursal destino seleccionada no se encuentra en los registros');
         }
 
-        $ruta = Ruta::withTrashed()->firstWhere([
+        $rutaE = Ruta::withTrashed()->firstWhere([
             ['origen_id', $request->origen],
             ['destino_id', $request->destino]
         ]);
         
-        if (is_null($ruta)) {
-            $ruta = Ruta::find($id);
-            $ruta->origen_id = $request->origen;
-            $ruta->destino_id = $request->destino;
-            $ruta->save();
-
-            return redirect('/rutas')
-                ->with('success', 'La ruta '.$ruta->origen->nombre.' - '.$ruta->destino->nombre.' fue actualizada satisfactoriamente');
+        if (!is_null($rutaE)) {
+            return back()
+                ->withInput()
+                ->with('error', 'La ruta '.$rutaE->origen->nombre.' - '.$rutaE->destino->nombre.' ya se encuentra registrada');
         }
         
-        return back()
-            ->withInput()
-            ->with('error', 'La ruta '.$ruta->origen->nombre.' - '.$ruta->destino->nombre.' ya se encuentra registrada');
+        $ruta->origen_id = $request->origen;
+        $ruta->destino_id = $request->destino;
+        $ruta->save();
+
+        return redirect('/rutas')
+            ->with('success', 'La ruta '.$ruta->origen->nombre.' - '.$ruta->destino->nombre.' fue actualizada satisfactoriamente');
     }
 
     /**

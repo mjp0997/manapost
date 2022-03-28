@@ -111,20 +111,27 @@ class EstadoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $estado = Estado::withTrashed()->firstWhere('nombre', $request->nombre);
-        
-        if (is_null($estado)) {
-            $estado = Estado::find($id);
-            $estado->nombre = $request->nombre;
-            $estado->save();
+        $estado = Estado::find($id);
 
-            return redirect('/estados')
-                ->with('success', 'El estado '.$estado->nombre.' fue actualizado satisfactoriamente');
+        if (is_null($estado)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El estado que busca no existe');
+        }
+
+        $estadoE = Estado::withTrashed()->firstWhere('nombre', $request->nombre);
+        
+        if (!is_null($estadoE)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El estado '.$request->nombre.' ya se encuentra registrado');
         }
         
-        return back()
-            ->withInput()
-            ->with('error', 'El estado '.$request->nombre.' ya se encuentra registrado');
+        $estado->nombre = $request->nombre;
+        $estado->save();
+
+        return redirect('/estados')
+            ->with('success', 'El estado '.$estado->nombre.' fue actualizado satisfactoriamente');
     }
 
     /**
