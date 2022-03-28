@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 
 // Controllers
 use App\Http\Controllers\CiudadController;
+use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\RolController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\SucursalController;
 
@@ -69,6 +71,36 @@ Route::group(['prefix' => '/sucursales', 'controller' => SucursalController::cla
 });
 
 Route::group(['prefix' => '/rutas', 'controller' => RutaController::class], function () {
+
+    Route::get('/', 'index');
+
+    Route::get('/mostrar/{id}', 'show');
+
+    Route::get('/crear', 'create');
+    Route::post('/guardar', 'store');
+
+    Route::get('/editar/{id}', 'edit');
+    Route::put('/actualizar/{id}', 'update');
+
+    Route::delete('/eliminar/{id}', 'destroy');
+});
+
+Route::group(['prefix' => '/roles', 'controller' => RolController::class], function () {
+
+    Route::get('/', 'index');
+
+    Route::get('/mostrar/{id}', 'show');
+
+    Route::get('/crear', 'create');
+    Route::post('/guardar', 'store');
+
+    Route::get('/editar/{id}', 'edit');
+    Route::put('/actualizar/{id}', 'update');
+
+    Route::delete('/eliminar/{id}', 'destroy');
+});
+
+Route::group(['prefix' => '/empleados', 'controller' => EmpleadoController::class], function () {
 
     Route::get('/', 'index');
 

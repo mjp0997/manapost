@@ -14,7 +14,11 @@ class RolController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Rol::where('nombre', '!=', 'DEV')->get();
+
+        return view('roles.list', [
+            'roles' => $roles
+        ]);
     }
 
     /**
@@ -24,7 +28,7 @@ class RolController extends Controller
      */
     public function create()
     {
-        //
+        return view('roles.create');
     }
 
     /**
@@ -35,7 +39,29 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rolNombre = strtoupper($request->nombre);
+
+        $rol = Rol::withTrashed()->firstWhere('nombre', $rolNombre);
+        
+        if (is_null($rol)) {
+            $rol = new Rol;
+            $rol->nombre = $rolNombre;
+            $rol->save();
+
+            return redirect('/roles')
+                ->with('success', 'El rol '.$rolNombre.' fue creado satisfactoriamente');
+        }
+
+        if (!is_null($rol->deleted_at)) {
+            $rol->restore();
+
+            return redirect('/roles')
+                ->with('success', 'El rol '.$rolNombre.' fue creado satisfactoriamente');
+        }
+
+        return back()
+            ->withInput()
+            ->with('error', 'El rol '.$rolNombre.' ya se encuentra registrado');
     }
 
     /**
@@ -44,9 +70,18 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function show(Rol $rol)
+    public function show($id)
     {
-        //
+        $rol = Rol::find($id);
+
+        if (is_null($rol)) {
+            return redirect('/roles')
+                ->with('error', 'El rol que busca no existe');
+        }
+
+        return view('roles.show', [
+            'rol' => $rol
+        ]);
     }
 
     /**
@@ -55,9 +90,18 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rol $rol)
+    public function edit($id)
     {
-        //
+        $rol = Rol::find($id);
+
+        if (is_null($rol)) {
+            return redirect('/roles')
+                ->with('error', 'El rol que busca no existe');
+        }
+
+        return view('roles.edit', [
+            'rol' => $rol
+        ]);
     }
 
     /**
@@ -67,9 +111,24 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rol $rol)
+    public function update(Request $request, $id)
     {
-        //
+        $rolNombre = strtoupper($request->nombre);
+
+        $rol = Rol::withTrashed()->firstWhere('nombre', $rolNombre);
+        
+        if (is_null($rol)) {
+            $rol = Rol::find($id);
+            $rol->nombre = $rolNombre;
+            $rol->save();
+
+            return redirect('/roles')
+                ->with('success', 'El rol '.$rol->nombre.' fue actualizado satisfactoriamente');
+        }
+        
+        return back()
+            ->withInput()
+            ->with('error', 'El rol '.$rolNombre.' ya se encuentra registrado');
     }
 
     /**
@@ -78,8 +137,16 @@ class RolController extends Controller
      * @param  \App\Models\Rol  $rol
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rol $rol)
+    public function destroy($id)
     {
-        //
+        $rol = Rol::find($id);
+
+        if (!is_null($rol)) {
+            $rol->delete();
+    
+            return redirect('/roles')->with('success', 'El rol '.$rol->nombre.' fue eliminado satisfactoriamente');
+        }
+
+        return redirect('/roles')->with('error', 'El rol que busca no existe');
     }
 }
