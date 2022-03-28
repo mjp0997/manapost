@@ -11,4 +11,9 @@ class Rol extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'roles';
+
+    public function empleados()
+    {
+        return $this->hasMany(Empleado::class, 'rol_id');
+    }
 }

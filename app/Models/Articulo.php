@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Articulo extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function envio()
+    {
+        return $this->belongsTo(Envio::class, 'envio_id');
+    }
 }

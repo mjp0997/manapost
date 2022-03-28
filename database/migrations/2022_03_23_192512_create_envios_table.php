@@ -18,17 +18,17 @@ class CreateEnviosTable extends Migration
         // si fecha_partida != null && fecha_arribo == null entonces se encuentra en traslado,
         // si fecha_partida != null && fecha_arribo != null entonces se encuentra en destino.
         
-        // Bandera "retirado" para determinar si fue retirado en la agencia destino por el cliente.
+        // "fecha_retiro" para determinar si fue retirado en la agencia destino por el cliente.
         Schema::create('envios', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_consignacion')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->date('fecha_retiro')->nullable();
             $table->decimal('peso', 10, 2);
             $table->foreignId('remitente_id')->constrained('clientes');
             $table->foreignId('destinatario_id')->constrained('clientes');
             $table->foreignId('lote_id')->constrained('lotes');
             $table->decimal('monto', 10, 2);
             $table->foreignId('consignatario_id')->constrained('empleados');
-            $table->boolean('retirado')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

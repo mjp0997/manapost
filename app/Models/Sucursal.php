@@ -12,7 +12,23 @@ class Sucursal extends Model
 
     protected $table = 'sucursales';
 
-    public function ciudad() {
+    public function ciudad()
+    {
         return $this->belongsTo(Ciudad::class, 'ciudad_id');
+    }
+
+    public function empleados()
+    {
+        return $this->hasMany(Empleado::class, 'sucursal_id');
+    }
+
+    public function rutasOrigen()
+    {
+        return $this->hasMany(Ruta::class, 'origen_id');
+    }
+
+    public function rutasDestino()
+    {
+        return $this->hasMany(Ruta::class, 'destino_id');
     }
 }

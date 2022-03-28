@@ -9,4 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Cliente extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function enviosRealizados()
+    {
+        return $this->hasMany(Envio::class, 'remitente_id');
+    }
+
+    public function enviosRecibidos()
+    {
+        return $this->hasMany(Envio::class, 'destinatario_id');
+    }
 }
