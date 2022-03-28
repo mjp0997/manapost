@@ -10,6 +10,15 @@ class Empleado extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $appends = ['edad'];
+
+    public function getEdadAttribute()
+    {
+        $diferencia = date_diff(date_create($this->fecha_nacimiento), date_create(date('Y-m-d')));
+
+        return $diferencia->format('%y');
+    }
+
     public function usuario()
     {
         return $this->hasOne(Usuario::class, 'empleado_id');
