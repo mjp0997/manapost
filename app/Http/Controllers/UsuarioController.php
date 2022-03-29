@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empleado;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        //
+        $usuarios = Usuario::all();
+
+        return view('usuarios.list', [
+            'usuarios' => $usuarios
+        ]);
     }
 
     /**
@@ -22,9 +27,18 @@ class UsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($empleado_id)
     {
-        //
+        $empleado = Empleado::find($empleado_id);
+
+        if (is_null($empleado)) {
+            return redirect('/empleados')
+                ->with('error', 'El empleado que busca no existe');
+        }
+
+        return view('usuarios.create', [
+            'empleado' => $empleado
+        ]);
     }
 
     /**
@@ -35,7 +49,37 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $auxUsuario = strtolower($request->usuario);
+
+        $empleado = Empleado::find($request->empleado);
+
+        if (is_null($empleado)) {
+            return redirect('/empleados')
+                ->with('error', 'El empleado que buscaba no existe');
+        }
+
+        if (!is_null($empleado->usuario)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El empleado con id '.$empleado->id.' ya posee un usuario');
+        }
+
+        $usuarioE = Usuario::firstWhere('usuario', $auxUsuario);
+
+        if (!is_null($usuarioE)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El usuario '.$auxUsuario.' se encuentra ocupado');
+        }
+
+        $usuario = new Usuario();
+        $usuario->usuario = $auxUsuario;
+        $usuario->clave = $request->clave;
+        $usuario->empleado_id = $empleado->id;
+        $usuario->save();
+
+        return redirect('/empleados/mostrar/'.$empleado->id)
+            ->with('success', 'Usuario generado exitosamente');
     }
 
     /**
@@ -78,8 +122,16 @@ class UsuarioController extends Controller
      * @param  \App\Models\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Usuario $usuario)
+    public function destroy($id)
     {
-        //
+        $usuario = Usuario::find($id);
+
+        if (!is_null($usuario)) {
+            $usuario->delete();
+
+            return redirect('/usuarios')->with('success', 'El usuario '.$usuario->usuario.' fue eliminado satisfactoriamente');
+        }
+
+        return redirect('/usuarios')->with('error', 'el usuario que busca no existe');
     }
 }

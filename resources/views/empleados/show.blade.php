@@ -5,6 +5,10 @@
       <div class="Section__Box">
          <h1 class="Modal__Title">Empleado</h1>
 
+         @if (session('success'))
+            <p style="color: rgb(14, 206, 14)">{{session('success')}}</p>
+         @endif
+
          <div class="Modal__Info">
             <label class="Modal__Label">ID:</label>
    
@@ -45,7 +49,33 @@
             <input name="nombre" class="Modal__Input" type="text" value="{{ $empleado->direccion }}" readonly>
          </div>
 
+         <hr class="separator" />
+
+         @if (!is_null($empleado->usuario))
+            <div class="Modal__Info">
+               <label class="Modal__Label">Usuario:</label>
+
+               <input name="nombre" class="Modal__Input" type="text" value="{{ $empleado->usuario->usuario }}" readonly>
+
+               <label class="Modal__Label">Contraseña:</label>
+
+               <input name="nombre" class="Modal__Input" type="text" value="{{ $empleado->usuario->clave }}" readonly>
+            </div>
+         @endif
+
          <div class="Modal__ButtonBox">
+            @if (is_null($empleado->usuario))
+               <a class="Modal__Button Add" href="{{ url('/usuarios/crear/'.$empleado->id) }}">Generar usuario</a>
+            @else
+               <form method="POST" action="{{ url('/usuarios/eliminar/'.$empleado->usuario->id) }}">
+                  @csrf
+                  
+                  @method('DELETE')
+
+                  <button type="submit" class="Modal__Button Return">Eliminar usuario</button>
+               </form>
+            @endif
+
             <a class="Modal__Button Return" href="{{ url()->previous() }}">Volver</a>
          </div>
       </div>

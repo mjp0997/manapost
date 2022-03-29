@@ -10,6 +10,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\TransporteController;
+use App\Http\Controllers\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +128,16 @@ Route::group(['prefix' => '/transportes', 'controller' => TransporteController::
 
     Route::get('/editar/{id}', 'edit');
     Route::put('/actualizar/{id}', 'update');
+
+    Route::delete('/eliminar/{id}', 'destroy');
+});
+
+Route::group(['prefix' => '/usuarios', 'controller' => UsuarioController::class], function () {
+
+    Route::get('/', 'index');
+
+    Route::get('/crear/{empleado_id}', 'create');
+    Route::post('/guardar', 'store');
 
     Route::delete('/eliminar/{id}', 'destroy');
 });
