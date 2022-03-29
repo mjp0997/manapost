@@ -134,8 +134,7 @@ class CiudadController extends Controller
         $ciudad = Ciudad::find($id);
 
         if (is_null($ciudad)) {
-            return back()
-                ->withInput()
+            return redirect('/ciudades')
                 ->with('error', 'La ciudad que busca no existe');
         }
 

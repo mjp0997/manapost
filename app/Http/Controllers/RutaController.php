@@ -148,8 +148,7 @@ class RutaController extends Controller
         $ruta = Ruta::find($id);
 
         if (is_null($ruta)) {
-            return back()
-                ->withInput()
+            return redirect('/rutas')
                 ->with('error', 'La ruta que busca no existe');
         }
 

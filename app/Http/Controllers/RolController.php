@@ -116,8 +116,7 @@ class RolController extends Controller
         $rol = Rol::find($id);
 
         if (is_null($rol)) {
-            return back()
-                ->withInput()
+            return redirect('/roles')
                 ->with('error', 'El rol que busca no existe');
         }
 

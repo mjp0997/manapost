@@ -114,8 +114,7 @@ class EstadoController extends Controller
         $estado = Estado::find($id);
 
         if (is_null($estado)) {
-            return back()
-                ->withInput()
+            return redirect('/estados')
                 ->with('error', 'El estado que busca no existe');
         }
 

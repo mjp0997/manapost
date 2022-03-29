@@ -14,6 +14,8 @@
    <a href="{{ url('/roles') }}" class="Aside__Button"><span class="icon-user"></span>Roles</a>
 
    <a href="{{ url('/empleados') }}" class="Aside__Button"><span class="icon-user"></span>Empleados</a>
+
+   <a href="{{ url('/transportes') }}" class="Aside__Button"><span class="icon-truck"></span>Transportes</a>
    
    <div class="Aside__Img">
       <div class="Aside__Separator"></div>

@@ -153,8 +153,7 @@ class EmpleadoController extends Controller
         $empleado = Empleado::find($id);
         
         if (is_null($empleado)) {
-            return back()
-                ->withInput()
+            return redirect('/empleados')
                 ->with('error', 'El empleado que busca no existe');
         }
         

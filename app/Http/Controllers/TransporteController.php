@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empleado;
 use App\Models\Transporte;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class TransporteController extends Controller
      */
     public function index()
     {
-        //
+        $transportes = Transporte::all();
+
+        return view('transportes.list', [
+            'transportes' => $transportes
+        ]);
     }
 
     /**
@@ -24,7 +29,11 @@ class TransporteController extends Controller
      */
     public function create()
     {
-        //
+        $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+
+        return view('transportes.create', [
+            'choferes' => $choferes
+        ]);
     }
 
     /**
@@ -35,7 +44,50 @@ class TransporteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $placa = strtoupper($request->placa);
+
+        $chofer = Empleado::find($request->chofer);
+
+        if (is_null($chofer) || $chofer->rol->nombre != 'CHOFER') {
+            return back()
+                ->withInput()
+                ->with('error', 'El chofer seleccionado no se encuentra en los registros');
+        }
+
+        $transporte = Transporte::firstWhere('placa', $placa);
+
+        if (!is_null($transporte)) {
+            return back()
+                ->withInput()
+                ->with('error', 'El transporte con placa '.$placa.' ya se encuentra registrado');
+        }
+
+        $transporte = Transporte::withTrashed()->firstWhere('placa', $placa);
+        
+        if (is_null($transporte)) {
+            $transporte = new Transporte;
+            $transporte->marca = $request->marca;
+            $transporte->modelo = $request->modelo;
+            $transporte->placa = $placa;
+            $transporte->chofer_id = $request->chofer;
+            $transporte->save();
+
+            return redirect('/transportes')
+                ->with('success', 'El transporte con placa '.$transporte->placa.' fue creado satisfactoriamente');
+        }
+
+        if (!is_null($transporte->deleted_at)) {
+            $transporte->restore();
+            $transporte->chofer_id = $request->chofer;
+            $transporte->save();
+
+            return redirect('/transportes')
+                ->with('success', 'El transporte con placa '.$placa.' fue creado satisfactoriamente');
+        }
+
+        return back()
+            ->withInput()
+            ->with('error', 'El transporte con placa '.$placa.' ya se encuentra registrado');
     }
 
     /**
@@ -44,9 +96,18 @@ class TransporteController extends Controller
      * @param  \App\Models\Transporte  $transporte
      * @return \Illuminate\Http\Response
      */
-    public function show(Transporte $transporte)
+    public function show($id)
     {
-        //
+        $transporte = Transporte::find($id);
+
+        if (is_null($transporte)) {
+            return redirect('/transportes')
+                ->with('error', 'El transporte que busca no existe');
+        }
+
+        return view('transportes.show', [
+            'transporte' => $transporte
+        ]);
     }
 
     /**
@@ -55,9 +116,21 @@ class TransporteController extends Controller
      * @param  \App\Models\Transporte  $transporte
      * @return \Illuminate\Http\Response
      */
-    public function edit(Transporte $transporte)
+    public function edit($id)
     {
-        //
+        $transporte = Transporte::find($id);
+
+        if (is_null($transporte)) {
+            return redirect('/transportes')
+                ->with('error', 'El transporte que busca no existe');
+        }
+
+        $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+
+        return view('transportes.edit', [
+            'transporte' => $transporte,
+            'choferes' => $choferes
+        ]);
     }
 
     /**
@@ -67,9 +140,41 @@ class TransporteController extends Controller
      * @param  \App\Models\Transporte  $transporte
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Transporte $transporte)
+    public function update(Request $request, $id)
     {
-        //
+        $placa = strtoupper($request->placa);
+
+        $transporte = Transporte::find($id);
+
+        if (is_null($transporte)) {
+            return redirect('/transportes')
+                ->with('error', 'El transporte que busca no existe');
+        }
+
+        $empleado = Empleado::find($request->chofer);
+
+        if (is_null($empleado) || $empleado->rol->nombre != 'CHOFER') {
+            return back()
+                ->withInput()
+                ->with('error', 'El chofer seleccionado no se encuentra en los registros');
+        }
+
+        $transporteE = Transporte::firstWhere('placa', $placa);
+
+        if (!is_null($transporteE) && $transporteE->id != $id) {
+            return back()
+                ->withInput()
+                ->with('error', 'El transporte con placa '.$placa.' ya se encuentra registrado');
+        }
+
+        $transporte->marca = $request->marca;
+        $transporte->modelo = $request->modelo;
+        $transporte->placa = $placa;
+        $transporte->chofer_id = $request->chofer;
+        $transporte->save();
+
+        return redirect('/transportes')
+            ->with('success', 'El transporte con placa '.$transporte->placa.' fue actualizado satisfactoriamente');
     }
 
     /**
@@ -78,8 +183,16 @@ class TransporteController extends Controller
      * @param  \App\Models\Transporte  $transporte
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Transporte $transporte)
+    public function destroy($id)
     {
-        //
+        $transporte = Transporte::find($id);
+
+        if (!is_null($transporte)) {
+            $transporte->delete();
+
+            return redirect('/transportes')->with('success', 'El transporte con placa '.$transporte->placa.' fue eliminado satisfactoriamente');
+        }
+
+        return redirect('/transportes')->with('error', 'El transporte que busca no existe');
     }
 }

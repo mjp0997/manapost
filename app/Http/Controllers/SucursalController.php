@@ -134,8 +134,7 @@ class SucursalController extends Controller
         $sucursal = Sucursal::find($id);
 
         if (is_null($sucursal)) {
-            return back()
-                ->withInput()
+            return redirect('/sucursales')
                 ->with('error', 'La sucursal que busca no existe');
         }
         
