@@ -582,3 +582,21 @@ body {
   color: #888888;
   border-color: #888888;
 }
+
+.logout {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+
+  background-color: transparent;
+
+  border: none;
+
+  font-size: 20px;
+  font-weight: 500;
+  color: rgb(133, 0, 0);
+}
+
+.logout:hover {
+  color: red;
+}

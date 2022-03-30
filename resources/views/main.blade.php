@@ -1,8 +1,8 @@
 @extends('layout.layout')
 
 @section('content')
+
 <section class="Section">
-   
 <article class="Section__Box" id="Envios" style="opacity: 1;">
       <h1 class="Section__Title"><span class="icon-briefcase"></span>Envios</h1>
       <form class="Section__Form">

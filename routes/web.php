@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Controllers
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\EstadoController;
@@ -23,121 +24,164 @@ use App\Http\Controllers\UsuarioController;
 |
 */
 
-Route::get('/', function () {
-    return view('main');
+Route::group(['controller' => AuthController::class], function () {
+
+    Route::get('/login', 'show')->name('login');
+
+    Route::post('/login', 'login');
+
+    Route::post('/logout', 'logout');
 });
 
-Route::group(['prefix' => '/estados', 'controller' => EstadoController::class], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', function () {
+        return view('main');
+    });
+    
+    Route::group([
+        'prefix' => '/estados',
+        'controller' => EstadoController::class,
+        'middleware' => 'rol:ADMIN,DEV'
+    ], function () {
 
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/ciudades', 'controller' => CiudadController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/sucursales', 'controller' => SucursalController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/rutas', 'controller' => RutaController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/roles', 'controller' => RolController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/empleados', 'controller' => EmpleadoController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/transportes', 'controller' => TransporteController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/mostrar/{id}', 'show');
-
-    Route::get('/crear', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::get('/editar/{id}', 'edit');
-    Route::put('/actualizar/{id}', 'update');
-
-    Route::delete('/eliminar/{id}', 'destroy');
-});
-
-Route::group(['prefix' => '/usuarios', 'controller' => UsuarioController::class], function () {
-
-    Route::get('/', 'index');
-
-    Route::get('/crear/{empleado_id}', 'create');
-    Route::post('/guardar', 'store');
-
-    Route::delete('/eliminar/{id}', 'destroy');
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/ciudades',
+        'controller' => CiudadController::class,
+        'middleware' => 'rol:ADMIN,DEV'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/sucursales',
+        'controller' => SucursalController::class,
+        'middleware' => 'rol:ADMIN,DEV'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/rutas',
+        'controller' => RutaController::class,
+        'middleware' => 'rol:ADMIN,DEV'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/roles',
+        'controller' => RolController::class,
+        'middleware' => 'rol:DEV'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/empleados',
+        'controller' => EmpleadoController::class,
+        'middleware' => 'rol:ADMIN,DEV,GERENTE'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/transportes',
+        'controller' => TransporteController::class,
+        'middleware' => 'rol:ADMIN,DEV,GERENTE'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
+    
+    Route::group([
+        'prefix' => '/usuarios',
+        'controller' => UsuarioController::class,
+        'middleware' => 'rol:ADMIN,DEV,GERENTE'
+    ], function () {
+    
+        Route::get('/', 'index');
+    
+        Route::get('/crear/{empleado_id}', 'create');
+        Route::post('/guardar', 'store');
+    
+        Route::delete('/eliminar/{id}', 'destroy');
+    });
 });

@@ -75,7 +75,7 @@ class UsuarioController extends Controller
         $usuario = new Usuario();
         $usuario->usuario = $auxUsuario;
         $usuario->clave = $request->clave;
-        $usuario->empleado_id = $empleado->id;
+        $usuario->empleado_id = $request->empleado;
         $usuario->save();
 
         return redirect('/empleados/mostrar/'.$empleado->id)
