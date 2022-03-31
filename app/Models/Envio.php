@@ -29,9 +29,4 @@ class Envio extends Model
     {
         return $this->belongsTo(Empleado::class, 'consignatario_id');
     }
-
-    public function articulos()
-    {
-        return $this->hasMany(Articulo::class, 'envio_id');
-    }
 }

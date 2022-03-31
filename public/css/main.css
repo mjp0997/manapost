@@ -292,7 +292,7 @@ body {
 }
 
 .Table {
-  width: 90%;
+  width: 100%;
   margin: 1rem 0.5rem;
   padding: 1rem;
   background: #E5E5E5;
@@ -318,6 +318,10 @@ body {
 .Table__ID {
   flex-grow: 0.5;
   padding-top: 0.5rem;
+
+  min-width: 40px;
+
+  text-align: center;
 }
 .Table__Text {
   width: 45%;
@@ -597,6 +601,7 @@ body {
 
 .Modal__Info.disabled > * {
   color: #888888;
+
   border-color: #888888;
 }
 
@@ -611,6 +616,7 @@ body {
 
   font-size: 20px;
   font-weight: 500;
+
   color: rgb(133, 0, 0);
 }
 
@@ -636,6 +642,7 @@ body {
 
 .navigation {
   width: 100%;
+
   display: flex;
 
   background-color: #E5E5E5;
@@ -667,4 +674,53 @@ body {
   cursor: pointer;
 
   background-color: #555;
+}
+
+.envios-container {
+  display: flex;
+
+  width: 100%;
+}
+
+.datos-personales {
+  width: 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.datos-personales .Modal__Label {
+  min-width: 83px;
+}
+
+.datos-personales input:read-only {
+  color: #555;
+}
+
+.Table__Row.envios {
+  grid-template-columns: 10fr 1fr;
+}
+
+.Modal__Label {
+  position: relative;
+}
+
+.Modal__Label::after {
+  position: absolute;
+  top: 80%;
+  left: 0;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  width: 60px;
+}
+
+.Modal__Label.peso::after {
+  content: 'En gramos';
+}
+
+.Modal__Label.monto::after {
+  content: 'En bolivares';
 }

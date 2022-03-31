@@ -23,11 +23,12 @@ class CreateEnviosTable extends Migration
             $table->id();
             $table->date('fecha_consignacion')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->date('fecha_retiro')->nullable();
+            $table->string('descripcion');
             $table->decimal('peso', 10, 2);
+            $table->decimal('monto', 10, 2);
             $table->foreignId('remitente_id')->constrained('clientes');
             $table->foreignId('destinatario_id')->constrained('clientes');
             $table->foreignId('lote_id')->constrained('lotes');
-            $table->decimal('monto', 10, 2);
             $table->foreignId('consignatario_id')->constrained('empleados');
             $table->timestamps();
             $table->softDeletes();

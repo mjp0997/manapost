@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\EnvioController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\RutaController;
@@ -183,5 +184,28 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/guardar', 'store');
     
         Route::delete('/eliminar/{id}', 'destroy');
+    });
+
+    Route::group([
+        'prefix' => '/envios',
+        'controller' => EnvioController::class,
+        'middleware' => 'rol:ADMIN,DEV,GERENTE,ATENCION'
+    ], function () {
+
+        // Route::get('/', 'index');
+        Route::get('/consignados', 'consignados');
+        Route::get('/recibidos', 'recibidos');
+        Route::get('/despachados', 'despachados');
+        Route::get('/entregados', 'entregados');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        Route::get('/crear', 'create');
+        Route::post('/guardar', 'store');
+    
+        // Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
+        // Route::delete('/eliminar/{id}', 'destroy');
     });
 });
