@@ -1,49 +1,47 @@
-@extends('layout.layout')
+@extends('layout.locaciones-layout')
 
 @section('content')
-   <section class="Section">
-      <form class="Section__Box" method="POST" action="{{ url('/rutas/actualizar/'.$ruta->id) }}">
-         <h1 class="Modal__Title">Actualizar Ruta</h1>
+<form class="section-content" method="POST" action="{{ url('/rutas/actualizar/'.$ruta->id) }}">
+   <h1 class="Modal__Title">Actualizar Ruta</h1>
 
-         @csrf
+   @csrf
 
-         @method('PUT')
+   @method('PUT')
 
-         @if (session('error'))
-            <p style="color: red">{{session('error')}}</p>
-         @endif
+   @if (session('error'))
+      <p style="color: red">{{session('error')}}</p>
+   @endif
 
-         <div class="Modal__Info">
-            <label class="Modal__Label">Origen:</label>
+   <div class="Modal__Info">
+      <label class="Modal__Label">Origen:</label>
 
-            <select name="origen" class="Modal__Input" required>
-               <option disabled value="">Seleccione una sucursal...</option>
+      <select name="origen" class="Modal__Input" required>
+         <option disabled value="">Seleccione una sucursal...</option>
 
-               @foreach ($sucursales as $sucursal)
-                  <option value="{{ $sucursal->id }}" {{ old('origen', $ruta->origen->id) == $sucursal->id ? 'selected' : '' }}>
-                     {{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }}
-                  </option>
-               @endforeach
-            </select>
+         @foreach ($sucursales as $sucursal)
+            <option value="{{ $sucursal->id }}" {{ old('origen', $ruta->origen->id) == $sucursal->id ? 'selected' : '' }}>
+               {{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }}
+            </option>
+         @endforeach
+      </select>
 
-            <label class="Modal__Label">Destino:</label>
-   
-            <select name="destino" class="Modal__Input" required>
-               <option disabled value="">Seleccione una sucursal...</option>
+      <label class="Modal__Label">Destino:</label>
 
-               @foreach ($sucursales as $sucursal)
-                  <option value="{{ $sucursal->id }}" {{ old('destino', $ruta->destino->id) == $sucursal->id ? 'selected' : '' }}>
-                     {{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }}
-                  </option>
-               @endforeach
-            </select>
-         </div>
+      <select name="destino" class="Modal__Input" required>
+         <option disabled value="">Seleccione una sucursal...</option>
 
-         <div class="Modal__ButtonBox">
-            <a class="Modal__Button Return" href="{{ url()->previous() }}">Volver</a>
+         @foreach ($sucursales as $sucursal)
+            <option value="{{ $sucursal->id }}" {{ old('destino', $ruta->destino->id) == $sucursal->id ? 'selected' : '' }}>
+               {{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }}
+            </option>
+         @endforeach
+      </select>
+   </div>
 
-            <button class="Modal__Button Save" type="submit">Actualizar</button>
-         </div>
-      </form>
-   </section>
+   <div class="Modal__ButtonBox">
+      <a class="Modal__Button Return" href="{{ url()->previous() }}">Volver</a>
+
+      <button class="Modal__Button Save" type="submit">Actualizar</button>
+   </div>
+</form>
 @endsection

@@ -20,7 +20,7 @@ class CreateEmpleadosTable extends Migration
             $table->string('direccion');
             $table->date('fecha_nacimiento');
             $table->foreignId('rol_id')->constrained('roles');
-            $table->foreignId('sucursal_id')->constrained('sucursales');
+            $table->foreignId('sucursal_id')->nullable()->constrained('sucursales');
             $table->timestamps();
             $table->softDeletes();
         });

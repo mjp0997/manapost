@@ -1,29 +1,27 @@
-@extends('layout.layout')
+@extends('layout.personal-layout')
 
 @section('content')
-   <section class="Section">
-      <form class="Section__Box" method="POST" action="{{ url('/roles/actualizar/'.$rol->id) }}">
-         <h1 class="Modal__Title">Actualizar Rol</h1>
+<form class="section-content" method="POST" action="{{ url('/roles/actualizar/'.$rol->id) }}">
+   <h1 class="Modal__Title">Actualizar Rol</h1>
 
-         @csrf
+   @csrf
 
-         @method('PUT')
+   @method('PUT')
 
-         @if (session('error'))
-            <p style="color: red">{{session('error')}}</p>
-         @endif
+   @if (session('error'))
+      <p style="color: red">{{session('error')}}</p>
+   @endif
 
-         <div class="Modal__Info">
-            <label class="Modal__Label">Nombre:</label>
+   <div class="Modal__Info">
+      <label class="Modal__Label">Nombre:</label>
 
-            <input name="nombre" class="Modal__Input" type="text" value="{{ old('nombre', $rol->nombre) }}" required>
-         </div>
+      <input name="nombre" class="Modal__Input" type="text" value="{{ old('nombre', $rol->nombre) }}" required>
+   </div>
 
-         <div class="Modal__ButtonBox">
-            <a class="Modal__Button Return" href="{{ url()->previous() }}">Volver</a>
+   <div class="Modal__ButtonBox">
+      <a class="Modal__Button Return" href="{{ url()->previous() }}">Volver</a>
 
-            <button class="Modal__Button Save" type="submit">Actualizar</button>
-         </div>
-      </form>
-   </section>
+      <button class="Modal__Button Save" type="submit">Actualizar</button>
+   </div>
+</form>
 @endsection

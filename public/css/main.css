@@ -1,4 +1,10 @@
 @import "../CSS/ICONS/_icons.css";
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 * {
   font-family: Calibri;
   font-size: 18px;
@@ -10,7 +16,9 @@
   background: #F97373;
   color: black;
 }
-
+body {
+  min-height: 100vh;
+}
 input:focus, input:hover {
   outline: none;
 }
@@ -19,7 +27,7 @@ a {
   text-decoration: none;
 }
 
-span {
+*:not(.Table__Button) > span {
   margin: 0 0.5rem;
 }
 
@@ -72,10 +80,10 @@ body {
   position: fixed;
   left: 0;
   top: 4rem;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   width: 11rem;
-  height: calc(100vh - 5rem);
   padding: 1rem 0 0;
   background: white;
   box-shadow: 0 0.1rem 0.5rem #888;
@@ -95,12 +103,14 @@ body {
   background: white;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
-.Aside__Button:hover {
+.Aside__Button:hover,
+.Aside__Button.active {
   font-weight: bold;
   color: black;
   background: #E5E5E5;
 }
-.Aside__Button:hover > span {
+.Aside__Button:hover > span,
+.Aside__Button.active > span {
   transition: color 0.1s;
   color: #FF2A00;
 }
@@ -200,13 +210,14 @@ body {
 }
 
 .Section {
-  width: calc(100% - 15rem);
+  width: calc(100% - 12rem);
   padding: 5rem 1.5rem 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   transform: translateX(11.5rem);
   transition: transform 0.2s, width 0.2s;
+  margin: 0;
 }
 .Section__Box, .Section__Box--Mid, .Section__BoxSub {
   display: flex;
@@ -297,7 +308,7 @@ body {
 .Table__Row, .Table__Row--Mid {
   padding: 0.2rem;
   display: grid;
-  grid-template-columns: 2fr 1.5fr;
+  grid-template-columns: 2fr 1fr;
   grid-gap: 0.5rem;
 }
 .Table__Row--Mid {
@@ -312,6 +323,7 @@ body {
   width: 45%;
   padding-top: 0.5rem;
   text-align: center;
+  flex-grow: 1;
 }
 .Table__ButtonBox {
   display: flex;
@@ -323,8 +335,8 @@ body {
   font-size: 1rem;
   padding: 0.5rem;
   margin: 0 0.2rem;
-  width: 6rem;
   background-color: #EFEFEF;
+  min-width: 10px;
 }
 .Table__Button:hover, .Table__Button--Mid:hover {
   cursor: pointer;
@@ -333,6 +345,9 @@ body {
 }
 .Table__Button--Mid {
   width: 3rem;
+}
+.Table__Button > span {
+  margin-right: 0.5rem;
 }
 
 .Modal__Box--Borrar {
@@ -485,7 +500,7 @@ body {
 .Modal__Info {
   display: flex;
   padding: 0.5rem;
-  width: calc(100% - 1rem);
+  width: 100%;
 }
 .Modal__Text {
   width: 100%;
@@ -504,8 +519,10 @@ body {
   border-bottom: 0.15rem solid #555;
   transition: border 0.3s;
   flex-grow: 1;
+  flex-shrink: 2;
   padding-bottom: 0.2rem;
   text-align: center;
+  min-width: 50px;
 }
 .Modal__Input:focus, .Modal__Input:hover {
   border-color: #FF2A00;
@@ -599,4 +616,55 @@ body {
 
 .logout:hover {
   color: red;
+}
+
+.section-navigable {
+  padding: 0;
+
+  width: 100%;
+}
+
+.section-content {
+  padding: 1rem 2rem 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+}
+
+.navigation {
+  width: 100%;
+  display: flex;
+
+  background-color: #E5E5E5;
+}
+
+.navigation-tab {
+  padding: 0.5rem 1rem;
+
+  color: #555;
+
+  transition: color 0.1s linear, background-color 0.1s linear;
+
+  cursor: default;
+
+  font-weight: 300;
+}
+
+.navigation-tab.active {
+  background-color: #FFFFFF;
+
+  color: #FF2A00;
+
+  font-weight: 400;
+}
+
+.navigation-tab:not(.active):hover {
+  color: #FFFFFF;
+
+  cursor: pointer;
+
+  background-color: #555;
 }

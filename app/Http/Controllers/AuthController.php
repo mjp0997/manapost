@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empleado;
 use App\Models\Usuario;
+use App\Models\Rol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -21,17 +24,25 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (!Auth::check()) {
-            $usuario = Usuario::firstWhere('usuario', $request->usuario);
-     
-            if ($usuario && $usuario->clave == $request->clave) {
-                Auth::login($usuario);
-    
-                return redirect('/');
+            $aux = $this->usuarioAuxiliar();
+            
+            if (!$aux) {
+                $usuario = Usuario::firstWhere('usuario', $request->usuario);
+         
+                if ($usuario && Hash::check($request->clave, $usuario->clave)) {
+                    Auth::login($usuario);
+        
+                    return redirect('/');
+                }
+         
+                return back()
+                    ->withInput()
+                    ->with('error', 'Usuario o contraseña incorrectos');
             }
-     
-            return back()
-                ->withInput()
-                ->with('error', 'Usuario o contraseña incorrectos');
+
+            Auth::login($aux);
+        
+            return redirect('/');
         }
 
         return redirect('/');
@@ -47,5 +58,38 @@ class AuthController extends Controller
         Auth::logout();
 
         return redirect('/login');
+    }
+
+    private function usuarioAuxiliar()
+    {
+        $usuarios = Usuario::all();
+
+        if (count($usuarios) == 0) {
+            $rol = Rol::firstWhere('nombre', 'DEV');
+
+            if (!$rol) {
+                $rol = new Rol();
+                $rol->nombre = 'DEV';
+                $rol->save();
+            }
+
+            $empleado = new Empleado();
+            $empleado->nombre = 'DEV';
+            $empleado->cedula = '-';
+            $empleado->direccion = '';
+            $empleado->fecha_nacimiento = date_create(date('Y-m-d'));
+            $empleado->rol_id = $rol->id;
+            $empleado->save();
+
+            $usuario = new Usuario();
+            $usuario->usuario = 'dev-master';
+            $usuario->clave = Hash::make('dev-master1');
+            $usuario->empleado_id = $empleado->id;
+            $usuario->save();
+
+            return $usuario;
+        }
+
+        return false;
     }
 }
