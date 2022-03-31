@@ -17,6 +17,9 @@ class EmpleadoController extends Controller
     public function index()
     {
         $empleados = Empleado::all();
+        $empleados = Empleado::with('rol')
+            ->whereRelation('rol', 'nombre', '!=', 'DEV')
+            ->get();
 
         return view('empleados.list', [
             'empleados' => $empleados

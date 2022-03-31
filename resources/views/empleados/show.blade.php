@@ -64,7 +64,7 @@
       @if (is_null($empleado->usuario))
          <a class="Modal__Button Add" href="{{ url('/usuarios/crear/'.$empleado->id) }}">Generar usuario</a>
       @else
-         <a class="Modal__Button Add" href="{{ url('/usuarios/editar/'.$empleado->usuario->id) }}">Nueva contraseña</a>
+         <a class="Modal__Button Add" href="{{ url('/usuarios/editar/'.$empleado->usuario->id) }}">Editar usuario</a>
 
          <form method="POST" action="{{ url('/usuarios/eliminar/'.$empleado->usuario->id) }}">
             @csrf

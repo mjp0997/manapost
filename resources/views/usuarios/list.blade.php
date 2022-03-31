@@ -39,6 +39,8 @@
                </div>
 
                <div class="Table__ButtonBox">
+                  <a class="Table__Button Edit" href="{{ url('/usuarios/editar/'.$usuario->id) }}"><span class="icon-pencil"></span>Editar</a>
+
                   <form method="POST" action="{{ url('/usuarios/eliminar/'.$usuario->id) }}">
                      @csrf
 

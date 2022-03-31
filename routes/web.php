@@ -183,6 +183,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/crear/{empleado_id}', 'create');
         Route::post('/guardar', 'store');
     
+        Route::get('/editar/{id}', 'edit');
+        Route::put('/actualizar/{id}', 'update');
+    
         Route::delete('/eliminar/{id}', 'destroy');
     });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -15,7 +16,9 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = Usuario::all();
+        $usuarios = Usuario::with('empleado', 'empleado.rol')
+            ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
+            ->get();
 
         return view('usuarios.list', [
             'usuarios' => $usuarios
@@ -74,7 +77,7 @@ class UsuarioController extends Controller
 
         $usuario = new Usuario();
         $usuario->usuario = $auxUsuario;
-        $usuario->clave = $request->clave;
+        $usuario->clave = Hash::make($request->clave);
         $usuario->empleado_id = $request->empleado;
         $usuario->save();
 
@@ -99,9 +102,18 @@ class UsuarioController extends Controller
      * @param  \App\Models\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function edit(Usuario $usuario)
+    public function edit($id)
     {
-        //
+        $usuario = Usuario::find($id);
+
+        if (is_null($usuario)) {
+            return redirect('/usuarios')
+                ->with('error', 'El usuario que busca no existe');
+        }
+
+        return view('usuarios.edit', [
+            'usuario' => $usuario
+        ]);
     }
 
     /**
@@ -111,9 +123,31 @@ class UsuarioController extends Controller
      * @param  \App\Models\Usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Usuario $usuario)
+    public function update(Request $request, $id)
     {
-        //
+        $usuario = Usuario::find($id);
+
+        if (is_null($usuario)) {
+            return redirect('/usuarios')
+                ->with('error', 'El usuario que busca no existe');
+        }
+
+        $auxUsuario = strtolower($request->usuario);
+
+        $usuarioE = Usuario::firstWhere('usuario', $auxUsuario);
+
+        if (!is_null($usuarioE) && $usuarioE->id != $id) {
+            return back()
+                ->withInput()
+                ->with('error', 'El usuario '.$auxUsuario.' se encuentra ocupado');
+        }
+
+        $usuario->usuario = $auxUsuario;
+        $usuario->clave = Hash::make($request->clave);
+        $usuario->save();
+
+        return redirect('/empleados/mostrar/'.$usuario->empleado->id)
+            ->with('success', 'Usuario generado exitosamente');
     }
 
     /**
