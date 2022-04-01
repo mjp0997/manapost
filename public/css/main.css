@@ -772,3 +772,23 @@ body {
 .page-link {
   line-height: 100%;
 }
+
+.auth-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+}
+
+.auth-user > p:first-child {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.auth-user > p:last-child {
+  font-weight: 600;
+
+  color: #FF2A00;
+}

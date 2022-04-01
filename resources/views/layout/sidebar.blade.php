@@ -1,4 +1,10 @@
 <aside class="Aside">
+
+   <div class="auth-user">
+      <p>Bienvenido:</p>
+      <p>{{ Auth::user()->empleado->nombre }}</p>
+   </div>
+
    @if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN', 'GERENTE', 'ATENCION']))
       <a
          href="{{ url('/envios/recibidos') }}"
