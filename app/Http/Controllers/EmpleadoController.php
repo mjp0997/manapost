@@ -6,6 +6,7 @@ use App\Models\Empleado;
 use App\Models\Rol;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmpleadoController extends Controller
 {
@@ -16,10 +17,16 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
-        $empleados = Empleado::all();
-        $empleados = Empleado::with('rol')
-            ->whereRelation('rol', 'nombre', '!=', 'DEV')
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $empleados = Empleado::with('rol')
+                ->whereRelation('rol', 'nombre', '!=', 'DEV')
+                ->get();
+        } else {
+            $empleados = Empleado::with('rol')
+                ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->whereRelation('rol', 'nombre', '!=', 'DEV')
+                ->get();
+        }
 
         return view('empleados.list', [
             'empleados' => $empleados
@@ -33,7 +40,14 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-        $roles = Rol::where('nombre', '!=', 'DEV')->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $roles = Rol::where('nombre', '!=', 'DEV')->get();
+        } else {
+            $roles = Rol::where([
+                ['nombre', '!=', 'DEV'],
+                ['nombre', '!=', 'ADMIN']
+            ])->get();
+        }
 
         $sucursales = Sucursal::all();
 
@@ -60,7 +74,7 @@ class EmpleadoController extends Controller
         if (!ctype_digit($request->cedula)) {
             return back()
                 ->withInput()
-                ->with('error', 'La cédula debe contener solo números enteros 1');
+                ->with('error', 'La cédula debe contener solo números enteros');
         }
 
         $rol = Rol::find($request->rol);
@@ -127,7 +141,14 @@ class EmpleadoController extends Controller
                 ->with('error', 'El empleado que busca no existe');
         }
 
-        $roles = Rol::where('nombre', '!=', 'DEV')->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $roles = Rol::where('nombre', '!=', 'DEV')->get();
+        } else {
+            $roles = Rol::where([
+                ['nombre', '!=', 'DEV'],
+                ['nombre', '!=', 'ADMIN']
+            ])->get();
+        }
 
         $sucursales = Sucursal::all();
 

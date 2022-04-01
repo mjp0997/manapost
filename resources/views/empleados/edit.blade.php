@@ -39,15 +39,19 @@
          @endforeach
       </select>
 
-      <label class="Modal__Label">Sucursal:</label>
+      @if (!in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN']))
+         <input type="hidden" name="sucursal" value="{{ Auth::user()->empleado->sucursal_id }}">
+      @else
+         <label class="Modal__Label">Sucursal:</label>
 
-      <select name="sucursal" class="Modal__Input" required>
-         <option disabled value="">Seleccione una sucursal...</option>
+         <select name="sucursal" class="Modal__Input" required>
+            <option disabled value="">Seleccione una sucursal...</option>
 
-         @foreach ($sucursales as $sucursal)
-            <option value="{{ $sucursal->id }}" {{ old('sucursal', $empleado->sucursal->id) == $sucursal->id ? 'selected' : '' }}>{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
-         @endforeach
-      </select>
+            @foreach ($sucursales as $sucursal)
+               <option value="{{ $sucursal->id }}" {{ old('sucursal', $empleado->sucursal->id) == $sucursal->id ? 'selected' : '' }}>{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
+            @endforeach
+         </select>
+      @endif
    </div>
 
    <div class="Modal__Info">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use App\Models\Transporte;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransporteController extends Controller
 {
@@ -15,7 +16,13 @@ class TransporteController extends Controller
      */
     public function index()
     {
-        $transportes = Transporte::all();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $transportes = Transporte::all();
+        } else {
+            $transportes = Transporte::with('chofer')
+                ->whereRelation('chofer', 'sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('transportes.list', [
             'transportes' => $transportes
@@ -29,7 +36,14 @@ class TransporteController extends Controller
      */
     public function create()
     {
-        $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+        } else {
+            $choferes = Empleado::with('rol')
+                ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->get();
+        }
 
         return view('transportes.create', [
             'choferes' => $choferes
@@ -125,7 +139,14 @@ class TransporteController extends Controller
                 ->with('error', 'El transporte que busca no existe');
         }
 
-        $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+        } else {
+            $choferes = Empleado::with('rol')
+                ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->get();
+        }
 
         return view('transportes.edit', [
             'transporte' => $transporte,

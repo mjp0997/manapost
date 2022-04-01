@@ -8,6 +8,7 @@ use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\EnvioController;
 use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\LoteController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\SucursalController;
@@ -208,6 +209,32 @@ Route::group(['middleware' => ['auth']], function () {
     
         // Route::get('/editar/{id}', 'edit');
         Route::put('/actualizar/{id}', 'update');
+    
+        // Route::delete('/eliminar/{id}', 'destroy');
+    });
+
+    Route::group([
+        'prefix' => '/lotes',
+        'controller' => LoteController::class,
+        'middleware' => 'rol:ADMIN,DEV,GERENTE,CHOFER'
+    ], function () {
+
+        Route::get('/consignados', 'consignados');
+        Route::get('/recibidos', 'recibidos');
+        Route::get('/despachados', 'despachados');
+    
+        Route::get('/mostrar/{id}', 'show');
+    
+        // Route::get('/crear', 'create');
+        // Route::post('/guardar', 'store');
+    
+        // Route::get('/editar/{id}', 'edit');
+        
+        Route::get('/transporte/{id}', 'edit');
+        Route::put('/asignar/{id}', 'update');
+
+        Route::put('/recibir/{id}', 'recibir');
+        Route::put('/despachar/{id}', 'despachar');
     
         // Route::delete('/eliminar/{id}', 'destroy');
     });

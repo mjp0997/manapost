@@ -19,7 +19,7 @@
 
       <label class="Modal__Label">Cedula:</label>
 
-      <input name="cedula" class="Modal__Input" type="text" value="{{ old('cedula') }}" required>
+      <input name="cedula" class="Modal__Input" type="number" value="{{ old('cedula') }}" required>
    </div>
 
    <div class="Modal__Info">
@@ -45,21 +45,26 @@
          @endif
       </select>
 
-      <label class="Modal__Label">Sucursal:</label>
+      @if (!in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN']))
+         <input type="hidden" name="sucursal" value="{{ Auth::user()->empleado->sucursal_id }}">
+      @else
+         <label class="Modal__Label">Sucursal:</label>
 
-      <select name="sucursal" class="Modal__Input" required>
-         @if (is_null(old('sucursal')))
-            <option disabled selected value="">Seleccione una sucursal...</option>
-            @foreach ($sucursales as $sucursal)
-               <option value="{{ $sucursal->id }}">{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
-            @endforeach
-         @else
-            <option disabled value="">Seleccione una sucursal...</option>
-            @foreach ($sucursales as $sucursal)
-               <option value="{{ $sucursal->id }}" {{ old('sucursal') == $sucursal->id ? 'selected' : '' }}>{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
-            @endforeach
-         @endif
-      </select>
+         <select name="sucursal" class="Modal__Input" required>
+            @if (is_null(old('sucursal')))
+               <option disabled selected value="">Seleccione una sucursal...</option>
+               @foreach ($sucursales as $sucursal)
+                  <option value="{{ $sucursal->id }}">{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
+               @endforeach
+            @else
+               <option disabled value="">Seleccione una sucursal...</option>
+               @foreach ($sucursales as $sucursal)
+                  <option value="{{ $sucursal->id }}" {{ old('sucursal') == $sucursal->id ? 'selected' : '' }}>{{ $sucursal->nombre }} - {{ $sucursal->ciudad->nombre }} - {{ $sucursal->ciudad->estado->nombre }}</option>
+               @endforeach
+            @endif
+         </select>
+      @endif
+
    </div>
 
    <div class="Modal__Info">

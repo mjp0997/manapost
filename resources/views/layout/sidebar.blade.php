@@ -1,4 +1,9 @@
 <aside class="Aside">
+   <a href="{{ url('/') }}" class="Aside__Button">
+      <span class="icon-checkmark"></span>
+      Inicio
+   </a>
+
    @if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN', 'GERENTE', 'ATENCION']))
       <a
          href="{{ url('/envios/recibidos') }}"
@@ -6,6 +11,16 @@
       >
          <span class="icon-briefcase"></span>
          Envíos
+      </a>
+   @endif
+
+   @if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN', 'GERENTE', 'CHOFER']))
+      <a
+         href="{{ url('/lotes/recibidos') }}"
+         class="Aside__Button {{ request()->is('lotes*') ? 'active' : '' }}"
+      >
+         <span class="icon-truck"></span>
+         Lotes
       </a>
    @endif
    

@@ -7,17 +7,25 @@ use App\Models\Envio;
 use App\Models\Lote;
 use App\Models\Ruta;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EnvioController extends Controller
 {
     public function consignados()
     {
-        $envios = Envio::with('lote')
-            ->whereRelation('lote', 'fecha_partida', null)
-            ->whereRelation('lote', 'fecha_arribo', null)
-            // ->whereRelation('lote', 'transporte_id', null)
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $envios = Envio::with('lote')
+                ->whereRelation('lote', 'fecha_partida', null)
+                ->whereRelation('lote', 'fecha_arribo', null)
+                ->get();
+        } else {
+            $envios = Envio::with('lote', 'lote.ruta')
+                ->whereRelation('lote', 'fecha_partida', null)
+                ->whereRelation('lote', 'fecha_arribo', null)
+                ->whereRelation('lote.ruta', 'origen_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('envios.list', [
             'title' => 'Envíos por despachar',
@@ -28,11 +36,20 @@ class EnvioController extends Controller
 
     public function recibidos()
     {
-        $envios = Envio::with('lote')
-            ->whereRelation('lote', 'fecha_partida', '!=', null)
-            ->whereRelation('lote', 'fecha_arribo', '!=', null)
-            ->whereRelation('lote', 'transporte_id', '!=', null)
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $envios = Envio::with('lote')
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', '!=', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->get();
+        } else {
+            $envios = Envio::with('lote', 'lote.ruta')
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', '!=', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->whereRelation('lote.ruta', 'destino_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('envios.list', [
             'title' => 'Envíos por entregar',
@@ -43,11 +60,20 @@ class EnvioController extends Controller
 
     public function despachados()
     {
-        $envios = Envio::with('lote')
-            ->whereRelation('lote', 'fecha_partida', '!=', null)
-            ->whereRelation('lote', 'fecha_arribo', null)
-            ->whereRelation('lote', 'transporte_id', '!=', null)
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $envios = Envio::with('lote')
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->get();
+        } else {
+            $envios = Envio::with('lote', 'lote.ruta')
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->whereRelation('lote.ruta', 'origen_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('envios.list', [
             'title' => 'Envíos despachados',
@@ -58,12 +84,22 @@ class EnvioController extends Controller
 
     public function entregados()
     {
-        $envios = Envio::with('lote')
-            ->where('fecha_retiro', '!=', null)
-            ->whereRelation('lote', 'fecha_partida', '!=', null)
-            ->whereRelation('lote', 'fecha_arribo', '!=', null)
-            ->whereRelation('lote', 'transporte_id', '!=', null)
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $envios = Envio::with('lote')
+                ->where('fecha_retiro', '!=', null)
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', '!=', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->get();
+        } else {
+            $envios = Envio::with('lote', 'lote.ruta')
+                ->where('fecha_retiro', '!=', null)
+                ->whereRelation('lote', 'fecha_partida', '!=', null)
+                ->whereRelation('lote', 'fecha_arribo', '!=', null)
+                ->whereRelation('lote', 'transporte_id', '!=', null)
+                ->whereRelation('lote.ruta', 'destino_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('envios.list', [
             'title' => 'Envíos entregados',
@@ -73,23 +109,18 @@ class EnvioController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        $rutas = Ruta::all();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $rutas = Ruta::all();
+        } else {
+            $rutas = Ruta::where('origen_id', Auth::user()->empleado->sucursal_id)
+                ->get();
+        }
 
         return view('envios.create', [
             'rutas' => $rutas
@@ -189,17 +220,6 @@ class EnvioController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Envio  $envio
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Envio $envio)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -225,16 +245,5 @@ class EnvioController extends Controller
 
         return redirect('/envios/mostrar/'.$envio->id)
             ->with('success', 'Envío actualizado satisfactoriamente');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Envio  $envio
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Envio $envio)
-    {
-        //
     }
 }

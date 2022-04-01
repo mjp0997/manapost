@@ -14,7 +14,9 @@
 <body>
    <header class="Header">
       <button class="Header__Button"><span class="icon-menu"></span></button>
+      
       <img class="Header__Logo" src="{{ asset('media/Logo ManaPost 2.png') }}">
+
       <form action="{{ url('/logout') }}" method="POST">
          @csrf
          

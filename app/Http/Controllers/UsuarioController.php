@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
@@ -16,9 +17,17 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = Usuario::with('empleado', 'empleado.rol')
-            ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
-            ->get();
+        if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
+            $usuarios = Usuario::with('empleado', 'empleado.rol')
+                ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
+                ->get();
+        } else {
+            $usuarios = Usuario::with('empleado', 'empleado.rol')
+                ->whereRelation('empleado', 'sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
+                ->whereRelation('empleado.rol', 'nombre', '!=', 'ADMIN')
+                ->get();
+        }
 
         return view('usuarios.list', [
             'usuarios' => $usuarios
@@ -83,17 +92,6 @@ class UsuarioController extends Controller
 
         return redirect('/empleados/mostrar/'.$empleado->id)
             ->with('success', 'Usuario generado exitosamente');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Usuario  $usuario
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Usuario $usuario)
-    {
-        //
     }
 
     /**

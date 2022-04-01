@@ -304,6 +304,7 @@ body {
 .Table__Info, .Table__Title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .Table__Row, .Table__Row--Mid {
   padding: 0.2rem;
@@ -331,6 +332,7 @@ body {
 }
 .Table__ButtonBox {
   display: flex;
+  align-items: center;
 }
 .Table__Button, .Table__Button--Mid {
   border: none;
