@@ -32,6 +32,10 @@ class AuthController extends Controller
                 if ($usuario && Hash::check($request->clave, $usuario->clave)) {
                     Auth::login($usuario);
         
+                    if ($usuario->empleado->rol->nombre == 'CHOFER') {
+                        return redirect('/lotes/consignados');
+                    }
+        
                     return redirect('/');
                 }
          
@@ -41,7 +45,7 @@ class AuthController extends Controller
             }
 
             Auth::login($aux);
-        
+
             return redirect('/');
         }
 

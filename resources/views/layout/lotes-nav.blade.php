@@ -1,13 +1,15 @@
 <div class="navigation">
-   <a
-      href="{{ url('/lotes/recibidos') }}"
-      class="navigation-tab {{ request()->is('lotes/recibidos') ? 'active' : '' }}"
-   >Recibidos</a>
+   @if (Auth::user()->empleado->rol->nombre != 'CHOFER')
+      <a
+         href="{{ url('/lotes/recibidos') }}"
+         class="navigation-tab {{ request()->is('lotes/recibidos') ? 'active' : '' }}"
+      >Recibidos</a>
 
-   <a
-      href="{{ url('/lotes/despachados') }}"
-      class="navigation-tab {{ request()->is('lotes/despachados') ? 'active' : '' }}"
-   >Despachados</a>
+      <a
+         href="{{ url('/lotes/despachados') }}"
+         class="navigation-tab {{ request()->is('lotes/despachados') ? 'active' : '' }}"
+      >Despachados</a>
+   @endif
    
    <a
       href="{{ url('/lotes/consignados') }}"

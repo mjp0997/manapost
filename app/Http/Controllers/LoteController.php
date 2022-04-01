@@ -6,16 +6,28 @@ use App\Models\Envio;
 use App\Models\Lote;
 use App\Models\Transporte;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {
     public function consignados()
     {
-        $lotes = Lote::where([
-            ['fecha_partida', null],
-            ['fecha_arribo', null]
-        ])->orderBy('created_at')->paginate(15);
+        if (Auth::user()->empleado->rol->nombre == 'CHOFER') {
+            $lotes = Lote::with('ruta')
+                ->where([
+                    ['fecha_partida', null],
+                    ['fecha_arribo', null]
+                ])
+                ->whereRelation('ruta', 'origen_id', Auth::user()->empleado->sucursal->id)
+                ->orderBy('created_at')
+                ->paginate(15);
+        } else {
+            $lotes = Lote::where([
+                ['fecha_partida', null],
+                ['fecha_arribo', null]
+            ])->orderBy('created_at')->paginate(15);
+        }
 
         return view('lotes.list', [
             'title' => 'Lotes por despachar',
