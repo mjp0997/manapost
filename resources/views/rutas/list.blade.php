@@ -61,6 +61,8 @@
                </div>
             </div>
          @endforeach
+         
+         {{ $rutas->links() }}
       @endif
    </div>
 </div>

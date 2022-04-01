@@ -15,7 +15,7 @@ class RutaController extends Controller
      */
     public function index()
     {
-        $rutas = Ruta::orderBy('origen_id')->get();
+        $rutas = Ruta::orderBy('origen_id')->paginate(15);
 
         return view('rutas.list', [
             'rutas' => $rutas

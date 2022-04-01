@@ -61,6 +61,8 @@
                </div>
             </div>
          @endforeach
+
+         {{ $sucursales->links() }}
       @endif
    </div>
 </div>

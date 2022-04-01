@@ -53,6 +53,8 @@
                </div>
             </div>
          @endforeach
+
+         {{ $estados->links() }}
       @endif
    </div>
 </div>

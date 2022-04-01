@@ -21,14 +21,14 @@ class UsuarioController extends Controller
             $usuarios = Usuario::with('empleado', 'empleado.rol')
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
                 ->orderBy('usuario')
-                ->get();
+                ->paginate(15);
         } else {
             $usuarios = Usuario::with('empleado', 'empleado.rol')
                 ->whereRelation('empleado', 'sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'ADMIN')
                 ->orderBy('usuario')
-                ->get();
+                ->paginate(15);
         }
 
         return view('usuarios.list', [

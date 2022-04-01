@@ -17,12 +17,12 @@ class TransporteController extends Controller
     public function index()
     {
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $transportes = Transporte::orderBy('modelo')->get();
+            $transportes = Transporte::orderBy('modelo')->paginate(15);
         } else {
             $transportes = Transporte::with('chofer')
                 ->whereRelation('chofer', 'sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->orderBy('modelo')
-                ->get();
+                ->paginate(15);
         }
 
         return view('transportes.list', [

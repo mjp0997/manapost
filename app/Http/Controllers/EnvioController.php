@@ -19,14 +19,14 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'fecha_partida', null)
                 ->whereRelation('lote', 'fecha_arribo', null)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         } else {
             $envios = Envio::with('lote', 'lote.ruta')
                 ->whereRelation('lote', 'fecha_partida', null)
                 ->whereRelation('lote', 'fecha_arribo', null)
                 ->whereRelation('lote.ruta', 'origen_id', Auth::user()->empleado->sucursal_id)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         }
 
         return view('envios.list', [
@@ -44,7 +44,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'fecha_arribo', '!=', null)
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         } else {
             $envios = Envio::with('lote', 'lote.ruta')
                 ->whereRelation('lote', 'fecha_partida', '!=', null)
@@ -52,7 +52,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->whereRelation('lote.ruta', 'destino_id', Auth::user()->empleado->sucursal_id)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         }
 
         return view('envios.list', [
@@ -70,7 +70,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'fecha_arribo', null)
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         } else {
             $envios = Envio::with('lote', 'lote.ruta')
                 ->whereRelation('lote', 'fecha_partida', '!=', null)
@@ -78,7 +78,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->whereRelation('lote.ruta', 'origen_id', Auth::user()->empleado->sucursal_id)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         }
 
         return view('envios.list', [
@@ -97,7 +97,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'fecha_arribo', '!=', null)
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         } else {
             $envios = Envio::with('lote', 'lote.ruta')
                 ->where('fecha_retiro', '!=', null)
@@ -106,7 +106,7 @@ class EnvioController extends Controller
                 ->whereRelation('lote', 'transporte_id', '!=', null)
                 ->whereRelation('lote.ruta', 'destino_id', Auth::user()->empleado->sucursal_id)
                 ->orderBy('created_at')
-                ->get();
+                ->paginate(15);
         }
 
         return view('envios.list', [

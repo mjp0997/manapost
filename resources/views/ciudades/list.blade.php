@@ -57,6 +57,8 @@
                </div>
             </div>
          @endforeach
+
+         {{ $ciudades->links() }}
       @endif
    </div>
 </div>

@@ -15,7 +15,7 @@ class LoteController extends Controller
         $lotes = Lote::where([
             ['fecha_partida', null],
             ['fecha_arribo', null]
-        ])->orderBy('created_at')->get();
+        ])->orderBy('created_at')->paginate(15);
 
         return view('lotes.list', [
             'title' => 'Lotes por despachar',
@@ -29,7 +29,7 @@ class LoteController extends Controller
         $lotes = Lote::where([
             ['fecha_partida', '!=', null],
             ['fecha_arribo', '!=', null]
-        ])->orderBy('created_at')->get();
+        ])->orderBy('created_at')->paginate(15);
 
         return view('lotes.list', [
             'title' => 'Lotes recibidos',
@@ -43,7 +43,7 @@ class LoteController extends Controller
         $lotes = Lote::where([
             ['fecha_partida', '!=', null],
             ['fecha_arribo', null]
-        ])->orderBy('created_at')->get();
+        ])->orderBy('created_at')->paginate(15);
 
         return view('lotes.list', [
             'title' => 'Lotes despachados',

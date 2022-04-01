@@ -15,7 +15,7 @@ class CiudadController extends Controller
      */
     public function index()
     {
-        $ciudades = Ciudad::orderBy('nombre')->get();
+        $ciudades = Ciudad::orderBy('nombre')->paginate(15);
 
         return view('ciudades.list', [
             'ciudades' => $ciudades

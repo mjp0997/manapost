@@ -58,6 +58,8 @@
             </div>
          @endforeach
       @endif
+
+      {{ $empleados->links() }}
    </div>
 </div>
 @endsection

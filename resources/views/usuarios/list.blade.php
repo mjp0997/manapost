@@ -53,6 +53,8 @@
                </div>
             </div>
          @endforeach
+
+         {{ $usuarios->links() }}
       @endif
    </div>
 </div>

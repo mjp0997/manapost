@@ -75,6 +75,8 @@
                </div>
             </div>
          @endforeach
+
+         {{ $lotes->links() }}
       @endif
    </div>
 </div>

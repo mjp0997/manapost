@@ -11,6 +11,7 @@ html {
   padding: 0;
   margin: 0;
   color: inherit;
+  list-style: none;
 }
 *::selection {
   background: #F97373;
@@ -27,7 +28,7 @@ a {
   text-decoration: none;
 }
 
-*:not(.Table__Button) > span {
+*:not(.Table__Button, .page-item) > span {
   margin: 0 0.5rem;
 }
 
@@ -725,4 +726,49 @@ body {
 
 .Modal__Label.monto::after {
   content: 'En bolivares';
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+
+  margin-top: 2rem;
+}
+
+.page-item {
+  background-color: #FFF;
+
+  padding: 0.3rem 0.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 5px;
+
+  transition: color 0.1s linear, background-color 0.1s linear;
+
+  cursor: default;
+}
+
+.page-item.disabled {
+  color: #bbb;
+}
+
+.page-item.active {
+  color: #FF2A00;
+}
+
+.page-item:not(.disabled, .active):hover {
+  background-color: #555;
+
+  color: #FFF;
+
+  cursor: pointer;
+}
+
+.page-link {
+  line-height: 100%;
 }

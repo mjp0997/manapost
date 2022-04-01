@@ -21,13 +21,13 @@ class EmpleadoController extends Controller
             $empleados = Empleado::with('rol')
                 ->whereRelation('rol', 'nombre', '!=', 'DEV')
                 ->orderBy('nombre')
-                ->get();
+                ->paginate(15);
         } else {
             $empleados = Empleado::with('rol')
                 ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('rol', 'nombre', '!=', 'DEV')
                 ->orderBy('nombre')
-                ->get();
+                ->paginate(15);
         }
 
         return view('empleados.list', [

@@ -14,7 +14,7 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        $estados = Estado::orderBy('nombre')->get();
+        $estados = Estado::orderBy('nombre')->paginate(15);
 
         return view('estados.list', [
             'estados' => $estados
