@@ -15,7 +15,7 @@ class CiudadController extends Controller
      */
     public function index()
     {
-        $ciudades = Ciudad::all();
+        $ciudades = Ciudad::orderBy('nombre')->get();
 
         return view('ciudades.list', [
             'ciudades' => $ciudades
@@ -29,7 +29,7 @@ class CiudadController extends Controller
      */
     public function create()
     {
-        $estados = Estado::all();
+        $estados = Estado::orderBy('nombre')->get();
 
         return view('ciudades.create', [
             'estados' => $estados
@@ -109,7 +109,7 @@ class CiudadController extends Controller
     {
         $ciudad = Ciudad::find($id);
 
-        $estados = Estado::all();
+        $estados = Estado::orderBy('nombre')->get();
 
         if (is_null($ciudad)) {
             return redirect('/ciudades')

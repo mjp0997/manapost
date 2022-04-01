@@ -14,7 +14,7 @@ class RolController extends Controller
      */
     public function index()
     {
-        $roles = Rol::where('nombre', '!=', 'DEV')->get();
+        $roles = Rol::where('nombre', '!=', 'DEV')->orderBy('nombre')->get();
 
         return view('roles.list', [
             'roles' => $roles

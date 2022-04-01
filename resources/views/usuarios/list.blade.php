@@ -17,9 +17,9 @@
          <div class="Table__Title">
             <div class="Table__ID">ID</div>
 
-            <div class="Table__Text">Empleado</div>
-
             <div class="Table__Text">Usuario</div>
+            
+            <div class="Table__Text">Empleado</div>
          </div>
       </div>
 
@@ -33,9 +33,9 @@
                <div class="Table__Info">
                   <div class="Table__ID">{{ $usuario->id }}</div>
 
-                  <div class="Table__Text">{{ $usuario->empleado->nombre }}</div>
-
                   <div class="Table__Text">{{ $usuario->usuario }}</div>
+                  
+                  <div class="Table__Text">{{ $usuario->empleado->nombre }}</div>
                </div>
 
                <div class="Table__ButtonBox">

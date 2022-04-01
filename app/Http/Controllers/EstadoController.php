@@ -14,7 +14,7 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        $estados = Estado::all();
+        $estados = Estado::orderBy('nombre')->get();
 
         return view('estados.list', [
             'estados' => $estados

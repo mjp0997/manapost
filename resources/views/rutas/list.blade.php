@@ -37,9 +37,13 @@
                <div class="Table__Info">
                   <div class="Table__ID">{{ $ruta->id }}</div>
 
-                  <div class="Table__Text">{{ $ruta->origen->nombre }} - {{ $ruta->origen->ciudad->nombre }}</div>
+                  <div class="Table__Text">
+                     {{ $ruta->origen->nombre }} - {{ $ruta->origen->ciudad->nombre }} - {{ $ruta->origen->ciudad->estado->nombre }}
+                  </div>
 
-                  <div class="Table__Text">{{ $ruta->destino->nombre }} - {{ $ruta->destino->ciudad->nombre }}</div>
+                  <div class="Table__Text">
+                     {{ $ruta->destino->nombre }} - {{ $ruta->destino->ciudad->nombre }} - {{ $ruta->destino->ciudad->estado->nombre }}
+                  </div>
                </div>
 
                <div class="Table__ButtonBox">

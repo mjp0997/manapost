@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
-use App\Models\Empleado;
 use App\Models\Envio;
 use App\Models\Lote;
 use App\Models\Transporte;
@@ -12,22 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class LoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function consignados()
     {
         $lotes = Lote::where([
             ['fecha_partida', null],
             ['fecha_arribo', null]
-        ])->get();
+        ])->orderBy('created_at')->get();
 
         return view('lotes.list', [
             'title' => 'Lotes por despachar',
@@ -41,7 +29,7 @@ class LoteController extends Controller
         $lotes = Lote::where([
             ['fecha_partida', '!=', null],
             ['fecha_arribo', '!=', null]
-        ])->get();
+        ])->orderBy('created_at')->get();
 
         return view('lotes.list', [
             'title' => 'Lotes recibidos',
@@ -55,34 +43,13 @@ class LoteController extends Controller
         $lotes = Lote::where([
             ['fecha_partida', '!=', null],
             ['fecha_arribo', null]
-        ])->get();
+        ])->orderBy('created_at')->get();
 
         return view('lotes.list', [
             'title' => 'Lotes despachados',
             'columnas' => ['ruta', 'transporte', 'fecha_partida'],
             'lotes' => $lotes
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -134,7 +101,10 @@ class LoteController extends Controller
                 ->with('error', 'El lote que busca no existe');
         }
 
-        $transportes = Transporte::with('chofer', 'chofer.rol')->whereRelation('chofer.rol', 'nombre', 'CHOFER')->get();
+        $transportes = Transporte::with('chofer', 'chofer.rol')
+            ->whereRelation('chofer.rol', 'nombre', 'CHOFER')
+            ->orderBy('nombre')
+            ->get();
 
         return view('lotes.edit', [
             'lote' => $lote,
@@ -228,16 +198,5 @@ class LoteController extends Controller
 
         return redirect('/lotes/mostrar/'.$lote->id)
             ->with('success', 'Lote actualizado satisfactoriamente');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Lote  $lote
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Lote $lote)
-    {
-        //
     }
 }

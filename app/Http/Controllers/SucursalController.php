@@ -15,7 +15,7 @@ class SucursalController extends Controller
      */
     public function index()
     {
-        $sucursales = Sucursal::all();
+        $sucursales = Sucursal::orderBy('nombre')->get();
 
         return view('sucursales.list', [
             'sucursales' => $sucursales
@@ -29,7 +29,7 @@ class SucursalController extends Controller
      */
     public function create()
     {
-        $ciudades = Ciudad::all();
+        $ciudades = Ciudad::orderBy('nombre')->get();
 
         return view('sucursales.create', [
             'ciudades' => $ciudades
@@ -109,7 +109,7 @@ class SucursalController extends Controller
     {
         $sucursal = Sucursal::find($id);
 
-        $ciudades = Ciudad::all();
+        $ciudades = Ciudad::orderBy('nombre')->get();
 
         if (is_null($sucursal)) {
             return redirect('/sucursales')

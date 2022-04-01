@@ -20,12 +20,14 @@ class UsuarioController extends Controller
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
             $usuarios = Usuario::with('empleado', 'empleado.rol')
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
+                ->orderBy('usuario')
                 ->get();
         } else {
             $usuarios = Usuario::with('empleado', 'empleado.rol')
                 ->whereRelation('empleado', 'sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'DEV')
                 ->whereRelation('empleado.rol', 'nombre', '!=', 'ADMIN')
+                ->orderBy('usuario')
                 ->get();
         }
 

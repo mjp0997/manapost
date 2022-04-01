@@ -15,7 +15,7 @@ class RutaController extends Controller
      */
     public function index()
     {
-        $rutas = Ruta::all();
+        $rutas = Ruta::orderBy('origen_id')->get();
 
         return view('rutas.list', [
             'rutas' => $rutas
@@ -29,7 +29,7 @@ class RutaController extends Controller
      */
     public function create()
     {
-        $sucursales = Sucursal::all();
+        $sucursales = Sucursal::orderBy('nombre')->get();
 
         return view('rutas.create', [
             'sucursales' => $sucursales
@@ -123,7 +123,7 @@ class RutaController extends Controller
     {
         $ruta = Ruta::find($id);
 
-        $sucursales = Sucursal::all();
+        $sucursales = Sucursal::orderBy('nombre')->get();
 
         if (is_null($ruta)) {
             return redirect('/rutas')

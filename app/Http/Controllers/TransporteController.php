@@ -17,10 +17,11 @@ class TransporteController extends Controller
     public function index()
     {
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $transportes = Transporte::all();
+            $transportes = Transporte::orderBy('modelo')->get();
         } else {
             $transportes = Transporte::with('chofer')
                 ->whereRelation('chofer', 'sucursal_id', Auth::user()->empleado->sucursal_id)
+                ->orderBy('modelo')
                 ->get();
         }
 
@@ -37,11 +38,15 @@ class TransporteController extends Controller
     public function create()
     {
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+            $choferes = Empleado::with('rol')
+                ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->orderBy('nombre')
+                ->get();
         } else {
             $choferes = Empleado::with('rol')
                 ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->orderBy('nombre')
                 ->get();
         }
 
@@ -140,11 +145,15 @@ class TransporteController extends Controller
         }
 
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $choferes = Empleado::with('rol')->whereRelation('rol', 'nombre', 'CHOFER')->get();
+            $choferes = Empleado::with('rol')
+                ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->orderBy('nombre')
+                ->get();
         } else {
             $choferes = Empleado::with('rol')
                 ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('rol', 'nombre', 'CHOFER')
+                ->orderBy('nombre')
                 ->get();
         }
 

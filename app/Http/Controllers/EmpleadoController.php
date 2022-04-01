@@ -20,11 +20,13 @@ class EmpleadoController extends Controller
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
             $empleados = Empleado::with('rol')
                 ->whereRelation('rol', 'nombre', '!=', 'DEV')
+                ->orderBy('nombre')
                 ->get();
         } else {
             $empleados = Empleado::with('rol')
                 ->where('sucursal_id', Auth::user()->empleado->sucursal_id)
                 ->whereRelation('rol', 'nombre', '!=', 'DEV')
+                ->orderBy('nombre')
                 ->get();
         }
 
@@ -41,15 +43,17 @@ class EmpleadoController extends Controller
     public function create()
     {
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $roles = Rol::where('nombre', '!=', 'DEV')->get();
+            $roles = Rol::where('nombre', '!=', 'DEV')
+                ->orderBy('nombre')
+                ->get();
         } else {
             $roles = Rol::where([
                 ['nombre', '!=', 'DEV'],
                 ['nombre', '!=', 'ADMIN']
-            ])->get();
+            ])->orderBy('nombre')->get();
         }
 
-        $sucursales = Sucursal::all();
+        $sucursales = Sucursal::orderBy('nombre')->get();
 
         $maxDate = date((date('Y') - 18).'-m-d');
 
@@ -142,15 +146,17 @@ class EmpleadoController extends Controller
         }
 
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
-            $roles = Rol::where('nombre', '!=', 'DEV')->get();
+            $roles = Rol::where('nombre', '!=', 'DEV')
+                ->orderBy('nombre')
+                ->get();
         } else {
             $roles = Rol::where([
                 ['nombre', '!=', 'DEV'],
                 ['nombre', '!=', 'ADMIN']
-            ])->get();
+            ])->orderBy('nombre')->get();
         }
 
-        $sucursales = Sucursal::all();
+        $sucursales = Sucursal::orderBy('nombre')->get();
 
         $maxDate = date((date('Y') - 18).'-m-d');
 
