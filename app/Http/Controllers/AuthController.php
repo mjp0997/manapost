@@ -96,4 +96,31 @@ class AuthController extends Controller
 
         return false;
     }
+
+    public function seed($token)
+    {
+        if ($token != 'hash-paw') {
+            return 'token inválido';
+        }
+
+        $roles = ['DEV', 'ADMIN', 'GERENTE', 'ATENCION', 'CHOFER'];
+
+        $respuesta = [];
+
+        $exists = Rol::all();
+
+        if (count($exists) == 0) {
+            foreach ($roles as $rol) {
+                $aux = new Rol();
+                $aux->nombre = $rol;
+                $aux->save();
+    
+                array_push($respuesta, $aux);
+            }
+
+            return $respuesta;
+        }
+
+        return 'roles existentes';
+    }
 }

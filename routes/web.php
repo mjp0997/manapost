@@ -33,6 +33,8 @@ Route::group(['controller' => AuthController::class], function () {
     Route::post('/login', 'login');
 
     Route::post('/logout', 'logout');
+
+    Route::get('/seed/{token}', 'seed');
 });
 
 Route::group(['middleware' => ['auth']], function () {
