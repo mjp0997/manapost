@@ -1,9 +1,4 @@
 <aside class="Aside">
-   <a href="{{ url('/') }}" class="Aside__Button">
-      <span class="icon-checkmark"></span>
-      Inicio
-   </a>
-
    @if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN', 'GERENTE', 'ATENCION']))
       <a
          href="{{ url('/envios/recibidos') }}"

@@ -37,7 +37,7 @@ Route::group(['controller' => AuthController::class], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', function () {
-        return view('main');
+        return redirect('/envios/recibidos');
     });
     
     Route::group([
