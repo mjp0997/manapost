@@ -17,7 +17,7 @@
 
    @if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN', 'GERENTE', 'CHOFER']))
       <a
-         href="{{ url('/lotes/recibidos') }}"
+         href="{{ Auth::user()->empleado->rol->nombre == 'CHOFER' ? url('/lotes/consignados') : url('/lotes/recibidos') }}"
          class="Aside__Button {{ request()->is('lotes*') ? 'active' : '' }}"
       >
          <span class="icon-truck"></span>
