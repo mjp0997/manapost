@@ -105,7 +105,7 @@
 
    <div class="Modal__ButtonBox">
       @if (!is_null($envio->lote->fecha_partida) && !is_null($envio->lote->fecha_arribo))
-         <form method="POST" action="{{ url('/envios/actualizar'.$envio->id) }}">
+         <form method="POST" action="{{ url('/envios/actualizar/'.$envio->id) }}">
             @csrf
 
             @method('PUT')

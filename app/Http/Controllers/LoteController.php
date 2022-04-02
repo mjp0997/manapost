@@ -115,7 +115,7 @@ class LoteController extends Controller
 
         $transportes = Transporte::with('chofer', 'chofer.rol')
             ->whereRelation('chofer.rol', 'nombre', 'CHOFER')
-            ->orderBy('nombre')
+            ->orderBy('modelo')
             ->get();
 
         return view('lotes.edit', [

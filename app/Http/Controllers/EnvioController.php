@@ -40,6 +40,7 @@ class EnvioController extends Controller
     {
         if (in_array(Auth::user()->empleado->rol->nombre, ['DEV', 'ADMIN'])) {
             $envios = Envio::with('lote')
+                ->where('fecha_retiro', null)
                 ->whereRelation('lote', 'fecha_partida', '!=', null)
                 ->whereRelation('lote', 'fecha_arribo', '!=', null)
                 ->whereRelation('lote', 'transporte_id', '!=', null)
@@ -47,6 +48,7 @@ class EnvioController extends Controller
                 ->paginate(15);
         } else {
             $envios = Envio::with('lote', 'lote.ruta')
+                ->where('fecha_retiro', null)
                 ->whereRelation('lote', 'fecha_partida', '!=', null)
                 ->whereRelation('lote', 'fecha_arribo', '!=', null)
                 ->whereRelation('lote', 'transporte_id', '!=', null)
@@ -244,12 +246,12 @@ class EnvioController extends Controller
                 ->with('error', 'El envío que busca no existe');
         }
 
-        if (!is_null($envio->fecha_consignacion)) {
+        if (!is_null($envio->fecha_retiro)) {
             return redirect('/envios/mostrar/'.$envio->id)
                 ->with('error', 'Este envío ya fue entregado anteriormente');
         }
 
-        $envio->fecha_consignacion = DB::raw('CURRENT_TIMESTAMP');
+        $envio->fecha_retiro = DB::raw('CURRENT_TIMESTAMP');
         $envio->save();
 
         return redirect('/envios/mostrar/'.$envio->id)
