@@ -213,6 +213,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/actualizar/{id}', 'update');
     
         // Route::delete('/eliminar/{id}', 'destroy');
+
+        Route::get('/buscar', 'buscar');
+        Route::post('/buscar', 'resultados');
     });
 
     Route::group([

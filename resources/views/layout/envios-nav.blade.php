@@ -5,6 +5,11 @@
    >Consignar envío</a>
 
    <a
+      href="{{ url('/envios/buscar') }}"
+      class="navigation-tab {{ request()->is('envios/buscar*') ? 'active' : '' }}"
+   >Buscar envío</a>
+
+   <a
       href="{{ url('/envios/recibidos') }}"
       class="navigation-tab {{ request()->is('envios/recibidos') ? 'active' : '' }}"
    >Por entregar</a>

@@ -257,4 +257,41 @@ class EnvioController extends Controller
         return redirect('/envios/mostrar/'.$envio->id)
             ->with('success', 'Envío actualizado satisfactoriamente');
     }
+
+    public function buscar()
+    {
+        return view('envios.search', [
+            'envios' => [],
+            'clave' => null,
+            'valor' => ''
+        ]);
+    }
+
+    public function resultados(Request $request)
+    {
+        $clave = $request->clave;
+        $valor = $request->valor;
+
+        if ($clave == 'id') {
+            $envios = Envio::where('id', $valor)->paginate(15);
+        } else if ($clave == 'cedula_remitente') {
+            $envios = Envio::with('remitente')
+                ->whereRelation('remitente', 'cedula', $valor)
+                ->orderBy('fecha_consignacion')
+                ->paginate(15);
+        } else if ($clave == 'cedula_destinatario') {
+            $envios = Envio::with('destinatario')
+                ->whereRelation('destinatario', 'cedula', $valor)
+                ->orderBy('fecha_consignacion')
+                ->paginate(15);
+        } else {
+            $envios = [];
+        }
+
+        return view('envios.search', [
+            'envios' => $envios,
+            'valor' => $valor,
+            'clave' => $clave
+        ]);
+    }
 }
